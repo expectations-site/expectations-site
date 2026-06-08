@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>EXPECTATIONS</title>
 <meta name="description" content="EXPECTATIONS. Sign up to get first access to the next drops.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,32 +21,39 @@
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body {
-    height:100%;
-    width:100%;
-    overflow:hidden;
-    position:fixed;
-    background:var(--black);
-    color:var(--white);
-    font-family:'Barlow',sans-serif;
-    font-weight:300;
-    -webkit-font-smoothing:antialiased;
-    cursor:none;
-  }
-  body {
-    height:100vh;
-    width:100vw;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:60px 24px 40px;
-    text-align:center;
-    background-color:#000;
+
+  html {
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
   }
 
-  #cur{position:fixed;width:7px;height:7px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s;}
-  #curR{position:fixed;width:34px;height:34px;border:1px solid rgba(255,255,255,.22);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease-out,top .1s ease-out,width .25s,height .25s;}
+  body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px 40px;
+    -webkit-overflow-scrolling: none;
+    touch-action: none;
+  }
+
+
 
   .marquee {
     position:fixed;
@@ -94,6 +101,8 @@
     align-items:center;
     gap:0;
     animation:fadeUp .8s ease both;
+    width: 100%;
+    max-width: 480px;
   }
 
   .eyebrow {
@@ -130,7 +139,7 @@
   }
 
   .logo-mark {
-    width:clamp(150px, 20vw, 260px);
+    width:clamp(100px, 15vw, 200px);
     height:auto;
     margin-bottom:10px;
     filter:invert(1) brightness(2);
@@ -145,19 +154,19 @@
 
   .divider {
     width:1px;
-    height:28px;
+    height:24px;
     background:linear-gradient(to bottom, transparent, var(--gold), transparent);
-    margin:4px auto 18px;
+    margin:4px auto 16px;
     opacity:.5;
   }
 
   .signup {
     display:flex;
     align-items:stretch;
-    gap:12px;
+    gap:8px;
     width:100%;
     max-width:480px;
-    margin-bottom:20px;
+    margin-bottom:16px;
   }
   .email-input {
     flex:1;
@@ -166,12 +175,13 @@
     -webkit-backdrop-filter:blur(12px);
     border:1px solid rgba(255,255,255,.15);
     border-radius:999px;
-    padding:20px 28px;
+    padding:14px 20px;
     color:var(--white);
     font-family:'Barlow',sans-serif;
-    font-size:15px;
+    font-size:14px;
     font-weight:300;
     outline:none;
+    -webkit-appearance: none;
   }
   .email-input::placeholder { color:rgba(255,255,255,.4); }
   .signup-btn {
@@ -179,13 +189,14 @@
     color:var(--black);
     border:none;
     border-radius:999px;
-    padding:20px 40px;
+    padding:14px 28px;
     font-family:'Barlow',sans-serif;
-    font-size:15px;
+    font-size:14px;
     font-weight:500;
     cursor:pointer;
     transition:background .2s;
     white-space:nowrap;
+    -webkit-appearance: none;
   }
   .signup-btn:hover { background:var(--gold); }
 
@@ -196,9 +207,9 @@
     letter-spacing:.3em;
     text-transform:uppercase;
     color:var(--gold);
-    margin-bottom:20px;
+    margin-bottom:16px;
     border:1px solid var(--border);
-    padding:18px 32px;
+    padding:16px 28px;
     background:var(--gold-lo);
   }
   .success.show { display:block; }
@@ -217,7 +228,7 @@
 
   .bottom-tag {
     position:fixed;
-    bottom:24px;
+    bottom:20px;
     font-family:'Barlow Condensed',sans-serif;
     font-size:9px;
     letter-spacing:.4em;
@@ -231,36 +242,26 @@
   }
 
   @media (max-width:600px) {
-    body { padding:70px 20px 30px; justify-content:center; }
-    .eyebrow { font-size:8px; margin-bottom:14px; }
-    .eyebrow::before, .eyebrow::after { width:24px; }
-    .message { font-size:16px; margin-bottom:16px; line-height:1.4; }
-    .logo-mark { width:clamp(120px, 32vw, 180px); margin-bottom:12px; }
-    .divider { height:28px; margin:4px auto 18px; }
-    .signup { flex-direction:row; gap:8px; max-width:100%; margin-bottom:10px; }
-    .email-input { padding:14px 18px; font-size:13px; }
-    .signup-btn { padding:14px 22px; font-size:13px; }
+    body { padding: 60px 20px 30px; }
+    .eyebrow { font-size:8px; margin-bottom:10px; }
+    .eyebrow::before, .eyebrow::after { width:20px; }
+    .message { font-size:14px; margin-bottom:12px; line-height:1.4; }
+    .logo-mark { width: clamp(80px, 25vw, 130px); margin-bottom:8px; }
+    .divider { height:20px; margin:2px auto 12px; }
+    .signup { gap:6px; margin-bottom:12px; }
+    .email-input { padding:12px 16px; font-size:13px; }
+    .signup-btn { padding:12px 20px; font-size:13px; }
     .socials { gap:20px; }
     .socials svg { width:17px; height:17px; }
-    .bottom-tag { font-size:8px; bottom:16px; }
+    .bottom-tag { font-size:8px; bottom:14px; }
   }
 </style>
 </head>
 <body>
 
-<div id="cur"></div>
-<div id="curR"></div>
-<div class="gold-line"></div>
 
-<!--
-  BACKGROUND VIDEO — uncomment when ready. Add your video file to the folder and replace "background.mp4".
-  For a background image: set body { background-image: url('your-image.jpg'); } in CSS above.
--->
-<!--
-<video autoplay muted loop playsinline style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:.45;">
-  <source src="background.mp4" type="video/mp4">
-</video>
--->
+
+<div class="gold-line"></div>
 
 <div class="marquee">
   <div class="marquee-track">
@@ -308,14 +309,17 @@
 <div class="bottom-tag">expectations.site</div>
 
 <script>
-  const cur = document.getElementById('cur');
-  const curR = document.getElementById('curR');
-  let mx=0,my=0;
-  document.addEventListener('mousemove',e=>{
-    mx=e.clientX; my=e.clientY;
-    cur.style.left=mx+'px'; cur.style.top=my+'px';
-  });
-  setInterval(()=>{ curR.style.left=mx+'px'; curR.style.top=my+'px'; },80);
+
+
+  // Prevent all scrolling and touch movement
+  document.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('scroll', function(e) {
+    e.preventDefault();
+    window.scrollTo(0, 0);
+  }, { passive: false });
 
   function handleSubmit(e){
     e.preventDefault();
