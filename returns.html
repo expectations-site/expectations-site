@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXPECTATIONS — Returns & Exchanges</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#080808;--off:#111214;--card:#161618;--border:#1e1e22;--white:#f2f0ec;--muted:#555;--light:#999;--gold:#c9a84c;--gold-lo:rgba(201,168,76,.10);--green:#4caf7a;--red:#e05555;}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;cursor:none;}
+  #cur{position:fixed;width:7px;height:7px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+  #curR{position:fixed;width:34px;height:34px;border:1px solid rgba(255,255,255,.22);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease-out,top .1s ease-out;}
+  a,button{cursor:none;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:22px 52px;background:rgba(8,8,8,.95);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.35em;color:var(--white);text-decoration:none;}
+  .nav-links{display:flex;gap:36px;list-style:none;}
+  .nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.5;transition:opacity .2s;}
+  .nav-links a:hover,.nav-links a.active{opacity:1;color:var(--gold);}
+
+  .hero{padding:140px 52px 60px;border-bottom:1px solid var(--border);}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,9vw,110px);line-height:.9;}
+  h1 span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);}
+  .hero-sub{font-size:13px;color:var(--light);margin-top:20px;line-height:1.7;max-width:500px;}
+
+  .layout{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 300px);}
+  .sidebar{padding:40px 36px;border-right:1px solid var(--border);position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto;}
+  .sidebar-nav{display:flex;flex-direction:column;gap:2px;}
+  .sidebar-link{padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s;}
+  .sidebar-link:hover{color:var(--white);background:rgba(255,255,255,.03);}
+  .sidebar-link.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-lo);}
+
+  .main-content{padding:52px 60px;}
+  section{margin-bottom:60px;padding-bottom:60px;border-bottom:1px solid var(--border);}
+  section:last-child{border-bottom:none;}
+  .section-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  h2{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.04em;margin-bottom:24px;}
+  p{font-size:13px;color:var(--light);line-height:1.8;margin-bottom:16px;}
+  p:last-child{margin-bottom:0;}
+  strong{color:var(--white);font-weight:400;}
+
+  /* PROCESS STEPS */
+  .steps{display:flex;flex-direction:column;gap:2px;margin:24px 0;}
+  .step{display:flex;gap:20px;padding:20px;background:var(--card);border:1px solid var(--border);}
+  .step-n{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);line-height:1;flex-shrink:0;width:36px;}
+  .step-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
+  .step p{font-size:12px;color:var(--muted);margin:0;}
+
+  /* ELIGIBILITY GRID */
+  .elig-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:20px 0;}
+  .elig-card{padding:20px 24px;background:var(--card);border:1px solid var(--border);}
+  .elig-card.yes{border-top:2px solid var(--green);}
+  .elig-card.no{border-top:2px solid var(--red);}
+  .elig-header{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;}
+  .elig-card.yes .elig-header{color:var(--green);}
+  .elig-card.no .elig-header{color:var(--red);}
+  .elig-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .elig-list li{font-size:12px;color:var(--muted);display:flex;gap:8px;line-height:1.5;}
+  .elig-list li::before{flex-shrink:0;}
+  .elig-card.yes .elig-list li::before{content:'✓';color:var(--green);}
+  .elig-card.no .elig-list li::before{content:'✕';color:var(--red);}
+
+  /* TIMELINE */
+  .timeline{display:flex;gap:0;margin:20px 0;overflow-x:auto;}
+  .tl-item{flex:1;min-width:120px;padding:16px;border:1px solid var(--border);border-right:none;text-align:center;position:relative;}
+  .tl-item:last-child{border-right:1px solid var(--border);}
+  .tl-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);}
+  .tl-unit{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+  .tl-desc{font-size:11px;color:var(--muted);margin-top:6px;}
+
+  /* CTA */
+  .return-cta{background:var(--card);border:1px solid var(--border);padding:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:20px;}
+  .return-cta p{font-size:13px;color:var(--light);max-width:400px;margin:0;}
+  .cta-btn{padding:14px 28px;background:var(--white);color:var(--black);border:none;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.15em;transition:background .2s;white-space:nowrap;}
+  .cta-btn:hover{background:var(--gold);}
+
+  @media(max-width:900px){
+    nav,div.hero{padding-left:24px;padding-right:24px;}
+    .layout{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+    .main-content{padding:40px 24px;}
+    .elig-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<nav>
+  <a href="index.html" class="nav-logo">EXPECTATIONS</a>
+  <ul class="nav-links">
+    <li><a href="index.html#products">Shop</a></li>
+    <li><a href="returns.html" class="active">Returns</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Customer Care</div>
+  <h1>RETURNS &<br><span>EXCHANGES</span></h1>
+  <p class="hero-sub">We stand behind everything we make. If something isn't right, we'll make it right — no hassle, no attitude.</p>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-nav">
+      <a class="sidebar-link active" href="#policy">Return Policy</a>
+      <a class="sidebar-link" href="#process">How to Return</a>
+      <a class="sidebar-link" href="#exchanges">Exchanges</a>
+      <a class="sidebar-link" href="#refunds">Refunds</a>
+      <a class="sidebar-link" href="#faulty">Faulty Items</a>
+      <a class="sidebar-link" href="#contact">Contact</a>
+    </div>
+  </div>
+  <div class="main-content">
+
+    <section id="policy">
+      <div class="section-label">Policy Overview</div>
+      <h2>Return Policy</h2>
+      <p>You have <strong>30 days</strong> from the date of delivery to return any item for a full refund or free size exchange. After 30 days, we can only offer an exchange or store credit.</p>
+      <p>All items must be returned in their <strong>original unworn condition</strong> — with tags attached, unwashed, and in the original packaging where possible.</p>
+
+      <div class="elig-grid">
+        <div class="elig-card yes">
+          <div class="elig-header">✓ Eligible for Return</div>
+          <ul class="elig-list">
+            <li>Unworn, unwashed items</li>
+            <li>Items with original tags attached</li>
+            <li>Returned within 30 days</li>
+            <li>Original packaging preferred</li>
+            <li>Wrong size received</li>
+            <li>Faulty or defective items</li>
+          </ul>
+        </div>
+        <div class="elig-card no">
+          <div class="elig-header">✕ Not Eligible</div>
+          <ul class="elig-list">
+            <li>Worn or washed items</li>
+            <li>Items without tags</li>
+            <li>After 30 days of delivery</li>
+            <li>Items marked Final Sale</li>
+            <li>Accessories (caps, bags)</li>
+            <li>Customised or altered items</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="section-label">Return Process</div>
+      <h2>How to Return</h2>
+      <p>Starting a return takes less than 2 minutes. Here's the process:</p>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><div class="step-title">Email Us</div><p>Send an email to <strong style="color:var(--gold)">returns@expectations.co</strong> with your order number and reason for return. We'll respond within 24 hours.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-title">Receive Return Label</div><p>We'll email you a prepaid return shipping label. Print it and attach to your package. <strong>Return shipping is free</strong> for size exchanges and faulty items.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-title">Pack & Drop Off</div><p>Pack the item securely, attach the label, and drop it at any DHL or FedEx drop-off point. Keep your receipt as proof of postage.</p></div></div>
+        <div class="step"><div class="step-n">4</div><div><div class="step-title">Refund or Exchange</div><p>Once we receive and inspect your return (usually 2–3 days), your refund or exchange will be processed immediately.</p></div></div>
+      </div>
+    </section>
+
+    <section id="exchanges">
+      <div class="section-label">Size Exchanges</div>
+      <h2>Exchanges</h2>
+      <p>Size exchanges are always <strong>free</strong>. Simply follow the return process above and note your desired size in the email. We'll ship the new size as soon as we receive your return.</p>
+      <p>If your desired size is out of stock, we'll offer a full refund or store credit.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-num">0</div><div class="tl-unit">Day</div><div class="tl-desc">Email us</div></div>
+        <div class="tl-item"><div class="tl-num">1</div><div class="tl-unit">Day</div><div class="tl-desc">Label sent</div></div>
+        <div class="tl-item"><div class="tl-num">3–7</div><div class="tl-unit">Days</div><div class="tl-desc">Transit back</div></div>
+        <div class="tl-item"><div class="tl-num">1–2</div><div class="tl-unit">Days</div><div class="tl-desc">Inspection</div></div>
+        <div class="tl-item"><div class="tl-num">3–5</div><div class="tl-unit">Days</div><div class="tl-desc">New item shipped</div></div>
+      </div>
+    </section>
+
+    <section id="refunds">
+      <div class="section-label">Refunds</div>
+      <h2>Refunds</h2>
+      <p>Refunds are processed to your original payment method within <strong>5–10 business days</strong> of us receiving your return. You'll receive an email confirmation when your refund is initiated.</p>
+      <p>Stripe processes refunds within 5–10 business days depending on your bank. If you haven't received your refund after 10 days, contact your bank first, then email us.</p>
+      <p><strong>Note:</strong> Original shipping costs are non-refundable unless the return is due to our error or a faulty item.</p>
+    </section>
+
+    <section id="faulty">
+      <div class="section-label">Faulty Items</div>
+      <h2>Faulty or Wrong Items</h2>
+      <p>If you received a faulty item or the wrong item, we sincerely apologise. Email us at <strong style="color:var(--gold)">returns@expectations.co</strong> with:</p>
+      <p>— Your order number<br>— A photo of the fault or wrong item<br>— Whether you'd prefer a replacement or refund</p>
+      <p>We'll cover all return shipping costs and prioritise your replacement or refund. Response within 24 hours guaranteed.</p>
+    </section>
+
+    <section id="contact">
+      <div class="section-label">Need Help?</div>
+      <h2>Contact Us</h2>
+      <p>Our customer care team is available Monday–Friday, 9am–6pm (GMT+2).</p>
+      <div class="return-cta">
+        <p>Can't find what you're looking for? Start your return or exchange directly by emailing us — we'll handle everything.</p>
+        <a href="mailto:returns@expectations.co" class="cta-btn">Start a Return →</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  setInterval(()=>{curR.style.left=mx+'px';curR.style.top=my+'px';},80);
+  // Active sidebar link on scroll
+  const sections=document.querySelectorAll('section[id]');
+  window.addEventListener('scroll',()=>{
+    let cur='';
+    sections.forEach(s=>{if(s.offsetTop-150<=window.scrollY)cur=s.id;});
+    document.querySelectorAll('.sidebar-link').forEach(l=>{
+      l.classList.toggle('active',l.getAttribute('href')==='#'+cur);
+    });
+  });
+</script>
+</body>
+</html>

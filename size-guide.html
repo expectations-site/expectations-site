@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXPECTATIONS — Size Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#080808; --off:#111214; --card:#161618; --border:#1e1e22; --white:#f2f0ec; --muted:#555; --light:#999; --gold:#c9a84c; --gold-lo:rgba(201,168,76,.10); }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;cursor:none;}
+  #cur{position:fixed;width:7px;height:7px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+  #curR{position:fixed;width:34px;height:34px;border:1px solid rgba(255,255,255,.22);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease-out,top .1s ease-out,width .25s,height .25s;}
+  a,button{cursor:none;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:22px 52px;background:rgba(8,8,8,.95);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.35em;color:var(--white);text-decoration:none;}
+  .nav-links{display:flex;gap:36px;list-style:none;}
+  .nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.5;transition:opacity .2s;}
+  .nav-links a:hover,.nav-links a.active{opacity:1;color:var(--gold);}
+
+  .hero{padding:140px 52px 60px;border-bottom:1px solid var(--border);}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,120px);line-height:.9;letter-spacing:.02em;}
+  h1 span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);}
+  .hero-sub{font-size:13px;color:var(--light);margin-top:20px;line-height:1.7;max-width:520px;}
+
+  .content{max-width:1200px;margin:0 auto;padding:60px 52px;}
+
+  /* HOW TO MEASURE */
+  .measure-section{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid var(--border);}
+  .section-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:.04em;margin-bottom:28px;}
+
+  .measure-steps{display:flex;flex-direction:column;gap:20px;}
+  .measure-step{display:flex;gap:16px;padding:18px;background:var(--card);border:1px solid var(--border);transition:border-color .2s;}
+  .measure-step:hover{border-color:var(--gold);}
+  .step-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);line-height:1;flex-shrink:0;width:32px;}
+  .step-body .step-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
+  .step-body p{font-size:12px;color:var(--muted);line-height:1.6;}
+
+  .body-diagram{background:var(--card);border:1px solid var(--border);padding:40px;display:flex;align-items:center;justify-content:center;min-height:400px;position:relative;}
+  .diagram-figure{position:relative;width:160px;height:320px;margin:0 auto;}
+  .diagram-line{position:absolute;border:1px dashed rgba(201,168,76,.3);}
+  .diagram-label{position:absolute;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+  /* Simple silhouette using CSS */
+  .figure-body{width:80px;height:180px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px 8px 4px 4px;position:absolute;left:50%;transform:translateX(-50%);top:60px;}
+  .figure-head{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);position:absolute;left:50%;transform:translateX(-50%);top:8px;}
+  .figure-arms{width:140px;height:24px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;position:absolute;left:50%;transform:translateX(-50%);top:80px;}
+  .figure-legs{display:flex;gap:8px;position:absolute;left:50%;transform:translateX(-50%);top:238px;}
+  .figure-leg{width:34px;height:80px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;}
+
+  /* measurement labels */
+  .ml{position:absolute;right:-120px;display:flex;align-items:center;gap:8px;}
+  .ml-line{height:1px;width:30px;background:rgba(201,168,76,.4);}
+  .ml span{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}
+  .ml.left{left:-120px;right:auto;flex-direction:row-reverse;}
+
+  /* SIZE TABLES */
+  .size-tables{margin-bottom:80px;}
+  .category-tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--border);}
+  .tab-btn{padding:12px 24px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;transition:all .2s;margin-bottom:-1px;}
+  .tab-btn:hover{color:var(--white);}
+  .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  .size-table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;}
+  thead tr{border-bottom:2px solid var(--border);}
+  th{padding:12px 20px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:400;}
+  th:first-child{text-align:left;}
+  td{padding:14px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;color:var(--light);transition:background .2s;}
+  td:first-child{text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--white);font-weight:600;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .recommended{background:var(--gold-lo);border:1px solid rgba(201,168,76,.2);}
+  .recommended td:first-child::after{content:' ✦';color:var(--gold);font-size:10px;}
+
+  /* UNIT TOGGLE */
+  .unit-toggle{display:flex;gap:0;margin-bottom:20px;}
+  .unit-btn{padding:7px 18px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;transition:all .2s;}
+  .unit-btn.active{background:var(--white);color:var(--black);border-color:var(--white);}
+
+  /* FIT GUIDE */
+  .fit-guide{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid var(--border);}
+  .fit-card{background:var(--card);border:1px solid var(--border);padding:28px 24px;transition:border-color .2s;}
+  .fit-card:hover{border-color:rgba(255,255,255,.15);}
+  .fit-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.05em;margin-bottom:4px;}
+  .fit-tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+  .fit-desc{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
+  .fit-products{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--light);}
+  .fit-visual{height:80px;margin-bottom:16px;display:flex;align-items:flex-end;justify-content:center;gap:4px;}
+  .fit-bar{background:rgba(255,255,255,.06);border-top:2px solid rgba(255,255,255,.15);}
+
+  /* NOTES */
+  .notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .note-card{background:var(--card);border:1px solid var(--border);padding:20px 24px;display:flex;gap:14px;}
+  .note-icon{font-size:20px;flex-shrink:0;}
+  .note-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
+  .note-text{font-size:12px;color:var(--muted);line-height:1.6;}
+
+  @media(max-width:900px){
+    nav{padding:18px 24px;}
+    .hero,.content{padding-left:24px;padding-right:24px;}
+    .measure-section{grid-template-columns:1fr;}
+    .fit-guide{grid-template-columns:1fr;}
+    .notes-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">EXPECTATIONS</a>
+  <ul class="nav-links">
+    <li><a href="index.html#products">Shop</a></li>
+    <li><a href="tryon.html">Try-On</a></li>
+    <li><a href="size-guide.html" class="active">Size Guide</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Fit Guide</div>
+  <h1>SIZE<br><span>GUIDE</span></h1>
+  <p class="hero-sub">All EXPECTATIONS pieces are designed with an intentional oversized silhouette. When in doubt, size down — our cuts are generous by design.</p>
+</div>
+
+<div class="content">
+
+  <!-- HOW TO MEASURE -->
+  <div class="measure-section">
+    <div>
+      <div class="section-label">How To Measure</div>
+      <div class="section-title">Get Your<br>Exact Fit</div>
+      <div class="measure-steps">
+        <div class="measure-step">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <div class="step-name">Chest</div>
+            <p>Measure around the fullest part of your chest, keeping the tape horizontal under your arms.</p>
+          </div>
+        </div>
+        <div class="measure-step">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <div class="step-name">Shoulders</div>
+            <p>Measure across your upper back from shoulder point to shoulder point.</p>
+          </div>
+        </div>
+        <div class="measure-step">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <div class="step-name">Waist</div>
+            <p>Measure around your natural waistline, about 1 inch above your belly button.</p>
+          </div>
+        </div>
+        <div class="measure-step">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <div class="step-name">Hips</div>
+            <p>Measure around the fullest part of your hips, about 8 inches below your waist.</p>
+          </div>
+        </div>
+        <div class="measure-step">
+          <div class="step-num">05</div>
+          <div class="step-body">
+            <div class="step-name">Inseam (bottoms)</div>
+            <p>Measure from the crotch seam to the bottom of the leg along the inner thigh.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body-diagram">
+      <div class="diagram-figure">
+        <div class="figure-head"></div>
+        <div class="figure-arms"></div>
+        <div class="figure-body"></div>
+        <div class="figure-legs">
+          <div class="figure-leg"></div>
+          <div class="figure-leg"></div>
+        </div>
+        <!-- Labels -->
+        <div style="position:absolute;left:calc(50% + 50px);top:88px;display:flex;align-items:center;gap:6px;">
+          <div style="height:1px;width:24px;background:rgba(201,168,76,.4)"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">Chest</span>
+        </div>
+        <div style="position:absolute;left:calc(50% + 50px);top:130px;display:flex;align-items:center;gap:6px;">
+          <div style="height:1px;width:24px;background:rgba(201,168,76,.4)"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">Waist</span>
+        </div>
+        <div style="position:absolute;left:calc(50% + 50px);top:170px;display:flex;align-items:center;gap:6px;">
+          <div style="height:1px;width:24px;background:rgba(201,168,76,.4)"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">Hips</span>
+        </div>
+        <div style="position:absolute;right:calc(50% + 50px);top:64px;display:flex;align-items:center;gap:6px;flex-direction:row-reverse;">
+          <div style="height:1px;width:24px;background:rgba(201,168,76,.4)"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">Shoulder</span>
+        </div>
+        <div style="position:absolute;right:calc(50% + 50px);top:240px;display:flex;align-items:center;gap:6px;flex-direction:row-reverse;">
+          <div style="height:1px;width:24px;background:rgba(201,168,76,.4)"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">Inseam</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIZE TABLES -->
+  <div class="size-tables">
+    <div class="section-label">Size Charts</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div class="category-tabs">
+        <button class="tab-btn active" onclick="switchTab('tops',this)">Tops</button>
+        <button class="tab-btn" onclick="switchTab('bottoms',this)">Bottoms</button>
+        <button class="tab-btn" onclick="switchTab('outerwear',this)">Outerwear</button>
+        <button class="tab-btn" onclick="switchTab('accessories',this)">Accessories</button>
+      </div>
+      <div class="unit-toggle">
+        <button class="unit-btn active" id="cmBtn" onclick="setUnit('cm')">CM</button>
+        <button class="unit-btn" id="inBtn" onclick="setUnit('in')">IN</button>
+      </div>
+    </div>
+
+    <!-- TOPS -->
+    <div class="tab-content active" id="tab-tops">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">Our tops are cut oversized. We recommend your usual size for a relaxed look, or sizing down for a closer (still oversized) fit.</p>
+      <div class="size-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Chest</th>
+              <th>Shoulders</th>
+              <th>Length</th>
+              <th>Sleeve</th>
+              <th>Height</th>
+            </tr>
+          </thead>
+          <tbody id="tops-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BOTTOMS -->
+    <div class="tab-content" id="tab-bottoms">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">Our bottoms feature a wide-leg, high-rise silhouette. Waist measurements refer to the garment waist, not body waist.</p>
+      <div class="size-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Waist</th>
+              <th>Hips</th>
+              <th>Inseam</th>
+              <th>Rise</th>
+              <th>Leg Opening</th>
+            </tr>
+          </thead>
+          <tbody id="bottoms-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- OUTERWEAR -->
+    <div class="tab-content" id="tab-outerwear">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">Outerwear is designed to be layered. Size up if you plan to wear thick knitwear underneath.</p>
+      <div class="size-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Chest</th>
+              <th>Shoulders</th>
+              <th>Length</th>
+              <th>Sleeve</th>
+              <th>Recommended Chest</th>
+            </tr>
+          </thead>
+          <tbody id="outerwear-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACCESSORIES -->
+    <div class="tab-content" id="tab-accessories">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">Caps are one size fits all with adjustable back strap.</p>
+      <div class="size-table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Size</th><th>Circumference</th><th>Fit</th></tr></thead>
+          <tbody>
+            <tr><td>6-Panel Cap</td><td>OS</td><td class="data-cm">54–60 cm</td><td>Adjustable strap</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIT GUIDE -->
+  <div class="section-label" style="margin-bottom:24px">Fit Styles</div>
+  <div class="fit-guide">
+    <div class="fit-card">
+      <div class="fit-visual">
+        <div class="fit-bar" style="width:50px;height:70px"></div>
+      </div>
+      <div class="fit-name">Oversized</div>
+      <div class="fit-tag">Relaxed · Dropped shoulders</div>
+      <div class="fit-desc">Our signature silhouette. Wide chest, dropped shoulders, extended length. The garment is meant to drape, not conform. Size down if you want a more structured look.</div>
+      <div class="fit-products">Archive Hoodie · Logo Tee · Longsleeve</div>
+    </div>
+    <div class="fit-card">
+      <div class="fit-visual">
+        <div class="fit-bar" style="width:38px;height:70px"></div>
+      </div>
+      <div class="fit-name">Wide Leg</div>
+      <div class="fit-tag">Relaxed · High rise</div>
+      <div class="fit-desc">Generous through the hip and thigh, tapering slightly at the ankle. High-rise waist sits above your natural waistline. Size down one if between sizes.</div>
+      <div class="fit-products">Shell Cargo Pants</div>
+    </div>
+    <div class="fit-card">
+      <div class="fit-visual">
+        <div class="fit-bar" style="width:44px;height:70px"></div>
+      </div>
+      <div class="fit-name">Boxy</div>
+      <div class="fit-tag">Structured · Square shoulders</div>
+      <div class="fit-desc">Clean, architectural cut. Structured shoulder line, boxy through the body. Not as extreme as oversized — sits more intentionally on the frame.</div>
+      <div class="fit-products">Club Jacket · Naif Tee</div>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="section-label" style="margin-bottom:20px">Good to Know</div>
+  <div class="notes-grid">
+    <div class="note-card"><div class="note-icon">🔄</div><div><div class="note-title">After Washing</div><p class="note-text">Expect 2–3% shrinkage after first wash. Wash cold, hang dry to maintain size and shape.</p></div></div>
+    <div class="note-card"><div class="note-icon">📏</div><div><div class="note-title">Between Sizes?</div><p class="note-text">For tops, size down. Our cuts are intentionally generous — a smaller size will still give a relaxed oversized look.</p></div></div>
+    <div class="note-card"><div class="note-icon">🤖</div><div><div class="note-title">AI Try-On</div><p class="note-text">Use our AI Virtual Try-On to see exactly how each piece looks on your body before you buy.</p></div></div>
+    <div class="note-card"><div class="note-icon">↩</div><div><div class="note-title">Free Exchanges</div><p class="note-text">Wrong size? We offer free size exchanges within 30 days. No questions asked.</p></div></div>
+  </div>
+
+</div>
+
+<script>
+  // CURSOR
+  const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  setInterval(()=>{curR.style.left=mx+'px';curR.style.top=my+'px';},80);
+
+  // SIZE DATA (cm)
+  const sizes = ['XS','S','M','L','XL'];
+  const topsData = {
+    cm: [
+      {chest:'98',shoulders:'48',length:'70',sleeve:'62',height:'165–170'},
+      {chest:'104',shoulders:'50',length:'72',sleeve:'63',height:'170–175'},
+      {chest:'112',shoulders:'53',length:'74',sleeve:'64',height:'175–180'},
+      {chest:'120',shoulders:'56',length:'76',sleeve:'65',height:'180–185'},
+      {chest:'130',shoulders:'59',length:'78',sleeve:'67',height:'185–192'},
+    ],
+    in: [
+      {chest:'38.5',shoulders:'18.9',length:'27.6',sleeve:'24.4',height:'65–67"'},
+      {chest:'41',shoulders:'19.7',length:'28.3',sleeve:'24.8',height:'67–69"'},
+      {chest:'44',shoulders:'20.9',length:'29.1',sleeve:'25.2',height:'69–71"'},
+      {chest:'47.2',shoulders:'22',length:'29.9',sleeve:'25.6',height:'71–73"'},
+      {chest:'51.2',shoulders:'23.2',length:'30.7',sleeve:'26.4',height:'73–76"'},
+    ]
+  };
+  const bottomsData = {
+    cm: [
+      {waist:'72',hips:'96',inseam:'78',rise:'30',leg:'38'},
+      {waist:'76',hips:'100',inseam:'79',rise:'31',leg:'40'},
+      {waist:'82',hips:'106',inseam:'80',rise:'32',leg:'44'},
+      {waist:'88',hips:'112',inseam:'81',rise:'33',leg:'48'},
+      {waist:'96',hips:'120',inseam:'82',rise:'34',leg:'52'},
+    ],
+    in: [
+      {waist:'28.3',hips:'37.8',inseam:'30.7',rise:'11.8',leg:'15'},
+      {waist:'29.9',hips:'39.4',inseam:'31.1',rise:'12.2',leg:'15.7'},
+      {waist:'32.3',hips:'41.7',inseam:'31.5',rise:'12.6',leg:'17.3'},
+      {waist:'34.6',hips:'44.1',inseam:'31.9',rise:'13',leg:'18.9'},
+      {waist:'37.8',hips:'47.2',inseam:'32.3',rise:'13.4',leg:'20.5'},
+    ]
+  };
+  const outerwearData = {
+    cm: [
+      {chest:'102',shoulders:'50',length:'72',sleeve:'64',rec:'88–94'},
+      {chest:'108',shoulders:'52',length:'74',sleeve:'65',rec:'94–100'},
+      {chest:'116',shoulders:'55',length:'76',sleeve:'66',rec:'100–108'},
+      {chest:'124',shoulders:'58',length:'78',sleeve:'67',rec:'108–116'},
+      {chest:'134',shoulders:'61',length:'80',sleeve:'69',rec:'116–126'},
+    ],
+    in: [
+      {chest:'40.2',shoulders:'19.7',length:'28.3',sleeve:'25.2',rec:'34.6–37'},
+      {chest:'42.5',shoulders:'20.5',length:'29.1',sleeve:'25.6',rec:'37–39.4'},
+      {chest:'45.7',shoulders:'21.7',length:'29.9',sleeve:'26',rec:'39.4–42.5'},
+      {chest:'48.8',shoulders:'22.8',length:'30.7',sleeve:'26.4',rec:'42.5–45.7'},
+      {chest:'52.8',shoulders:'24',length:'31.5',sleeve:'27.2',rec:'45.7–49.6'},
+    ]
+  };
+
+  let currentUnit = 'cm';
+  const recommendedIdx = 2; // M is recommended
+
+  function renderTops() {
+    const data = topsData[currentUnit];
+    document.getElementById('tops-body').innerHTML = sizes.map((s,i) =>
+      `<tr class="${i===recommendedIdx?'recommended':''}">
+        <td>${s}</td><td>${data[i].chest}</td><td>${data[i].shoulders}</td>
+        <td>${data[i].length}</td><td>${data[i].sleeve}</td><td>${data[i].height}</td>
+      </tr>`
+    ).join('');
+  }
+  function renderBottoms() {
+    const data = bottomsData[currentUnit];
+    document.getElementById('bottoms-body').innerHTML = sizes.map((s,i) =>
+      `<tr class="${i===recommendedIdx?'recommended':''}">
+        <td>${s}</td><td>${data[i].waist}</td><td>${data[i].hips}</td>
+        <td>${data[i].inseam}</td><td>${data[i].rise}</td><td>${data[i].leg}</td>
+      </tr>`
+    ).join('');
+  }
+  function renderOuterwear() {
+    const data = outerwearData[currentUnit];
+    document.getElementById('outerwear-body').innerHTML = sizes.map((s,i) =>
+      `<tr class="${i===recommendedIdx?'recommended':''}">
+        <td>${s}</td><td>${data[i].chest}</td><td>${data[i].shoulders}</td>
+        <td>${data[i].length}</td><td>${data[i].sleeve}</td><td>${data[i].rec}</td>
+      </tr>`
+    ).join('');
+  }
+
+  function setUnit(u) {
+    currentUnit = u;
+    document.getElementById('cmBtn').classList.toggle('active', u==='cm');
+    document.getElementById('inBtn').classList.toggle('active', u==='in');
+    renderTops(); renderBottoms(); renderOuterwear();
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+name).classList.add('active');
+  }
+
+  renderTops(); renderBottoms(); renderOuterwear();
+</script>
+</body>
+</html>

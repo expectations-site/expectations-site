@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXPECTATIONS — Archive Oversized Hoodie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#080808;--off:#111214;--card:#161618;--border:#1e1e22;--white:#f2f0ec;--muted:#555;--light:#999;--gold:#c9a84c;--gold-lo:rgba(201,168,76,.10);--green:#4caf7a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;cursor:none;}
+  #cur{position:fixed;width:7px;height:7px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+  #curR{position:fixed;width:34px;height:34px;border:1px solid rgba(255,255,255,.22);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease-out,top .1s ease-out,width .25s,height .25s;}
+  a,button{cursor:none;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:22px 52px;background:rgba(8,8,8,.95);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.35em;color:var(--white);text-decoration:none;}
+  .nav-links{display:flex;gap:36px;list-style:none;}
+  .nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.5;transition:opacity .2s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-bag{background:none;border:1px solid var(--border);padding:7px 16px;color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;transition:all .2s;}
+  .nav-bag:hover{border-color:var(--white);color:var(--white);}
+
+  /* BREADCRUMB */
+  .breadcrumb{padding:88px 52px 0;display:flex;align-items:center;gap:10px;}
+  .breadcrumb a,.breadcrumb span{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--white);}
+  .breadcrumb .sep{color:var(--border);}
+  .breadcrumb .current{color:var(--gold);}
+
+  /* PRODUCT LAYOUT */
+  .product-layout{display:grid;grid-template-columns:1fr 480px;gap:2px;padding-top:20px;}
+
+  /* GALLERY */
+  .gallery{position:sticky;top:72px;height:calc(100vh - 72px);display:flex;gap:2px;}
+  .gallery-thumbs{width:72px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;padding:12px 0 12px 12px;}
+  .thumb{width:60px;height:76px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:.4;transition:all .2s;flex-shrink:0;}
+  .thumb:hover,.thumb.active{opacity:1;border-color:var(--gold);}
+  .thumb-text{font-family:'Bebas Neue',sans-serif;font-size:7px;text-align:center;color:rgba(255,255,255,.3);letter-spacing:.05em;}
+  .gallery-main{flex:1;background:var(--off);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .main-img-placeholder{text-align:center;}
+  .main-img-placeholder .big-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,100px);color:rgba(255,255,255,.04);letter-spacing:.05em;}
+  .badge-new{position:absolute;top:20px;left:20px;padding:5px 12px;background:var(--gold);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;}
+  .badge-zoom{position:absolute;bottom:20px;right:20px;padding:6px 14px;border:1px solid var(--border);background:rgba(8,8,8,.8);color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;transition:all .2s;}
+  .badge-zoom:hover{border-color:var(--white);color:var(--white);}
+
+  /* PRODUCT INFO */
+  .product-info{padding:40px 48px;overflow-y:auto;max-height:calc(100vh - 72px);}
+  .product-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+  .product-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:.02em;margin-bottom:8px;}
+  .product-price-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+  .product-price{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);}
+  .stars{display:flex;gap:2px;align-items:center;}
+  .star{color:var(--gold);font-size:12px;}
+  .star.empty{color:var(--border);}
+  .review-count{font-size:11px;color:var(--muted);margin-left:6px;}
+
+  /* COLOR SELECTOR */
+  .selector-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .color-row{display:flex;gap:8px;margin-bottom:24px;}
+  .color-swatch{width:28px;height:28px;border-radius:50%;border:2px solid transparent;transition:all .2s;position:relative;}
+  .color-swatch.active{border-color:var(--white);}
+  .color-swatch::after{content:'';position:absolute;inset:2px;border-radius:50%;}
+
+  /* SIZE SELECTOR */
+  .size-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .size-btn{padding:10px 16px;border:1px solid var(--border);background:transparent;color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;transition:all .2s;min-width:50px;text-align:center;}
+  .size-btn:hover{border-color:var(--white);color:var(--white);}
+  .size-btn.active{background:var(--white);color:var(--black);border-color:var(--white);}
+  .size-btn.soldout{opacity:.3;text-decoration:line-through;pointer-events:none;}
+  .size-guide-link{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;margin-bottom:24px;display:inline-block;}
+  .size-guide-link:hover{color:var(--gold);}
+
+  /* ADD TO CART */
+  .add-btn{width:100%;padding:18px;background:var(--white);color:var(--black);border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.15em;transition:background .2s;margin-bottom:10px;position:relative;overflow:hidden;}
+  .add-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);transform:translateX(-100%);transition:transform .5s;}
+  .add-btn:hover{background:var(--gold);}
+  .add-btn:hover::before{transform:translateX(100%);}
+  .add-btn:disabled{opacity:.3;pointer-events:none;}
+  .try-btn{width:100%;padding:14px;background:transparent;border:1px solid var(--border);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.25em;text-transform:uppercase;transition:all .2s;margin-bottom:24px;}
+  .try-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* GUARANTEES */
+  .guarantees{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:28px;}
+  .guarantee{padding:14px;background:var(--card);border:1px solid var(--border);text-align:center;}
+  .guarantee-icon{font-size:16px;margin-bottom:4px;}
+  .guarantee-text{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+
+  /* DIVIDER */
+  .info-divider{height:1px;background:var(--border);margin:24px 0;}
+
+  /* ACCORDION */
+  .accordion-item{border-bottom:1px solid var(--border);}
+  .accordion-item:first-child{border-top:1px solid var(--border);}
+  .accordion-header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 0;background:none;border:none;color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;transition:color .2s;}
+  .accordion-header:hover{color:var(--gold);}
+  .accordion-icon{font-size:16px;transition:transform .25s;color:var(--muted);}
+  .accordion-body{display:none;padding:0 0 16px;}
+  .accordion-body p{font-size:12px;color:var(--muted);line-height:1.75;}
+  .accordion-body ul{list-style:none;padding:0;}
+  .accordion-body ul li{font-size:12px;color:var(--muted);padding:3px 0 3px 14px;position:relative;}
+  .accordion-body ul li::before{content:'—';position:absolute;left:0;color:var(--border);}
+  .accordion-item.open .accordion-icon{transform:rotate(45deg);color:var(--gold);}
+  .accordion-item.open .accordion-body{display:block;}
+
+  /* REVIEWS */
+  .reviews-section{padding:60px 52px;border-top:1px solid var(--border);}
+  .reviews-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
+  .reviews-score{display:flex;align-items:flex-end;gap:16px;}
+  .score-num{font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--white);}
+  .score-meta .stars{margin-bottom:4px;}
+  .score-meta p{font-size:11px;color:var(--muted);}
+  .write-review-btn{padding:10px 20px;border:1px solid var(--border);background:transparent;color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;transition:all .2s;}
+  .write-review-btn:hover{border-color:var(--white);color:var(--white);}
+  .reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .review-card{background:var(--card);border:1px solid var(--border);padding:24px;}
+  .review-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+  .reviewer-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
+  .review-date{font-size:11px;color:var(--muted);}
+  .review-text{font-size:13px;color:var(--light);line-height:1.7;}
+  .review-size{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;}
+  .verified{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-top:6px;}
+
+  /* RELATED */
+  .related-section{padding:60px 52px;border-top:1px solid var(--border);}
+  .related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+  .related-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:border-color .2s;}
+  .related-card:hover{border-color:rgba(255,255,255,.15);}
+  .related-img{height:200px;display:flex;align-items:center;justify-content:center;background:var(--off);}
+  .related-img-text{font-family:'Bebas Neue',sans-serif;font-size:14px;color:rgba(255,255,255,.08);text-align:center;letter-spacing:.05em;}
+  .related-info{padding:14px 16px;}
+  .related-name{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+  .related-price{font-size:12px;color:var(--gold);}
+
+  @media(max-width:1024px){.product-layout{grid-template-columns:1fr;}.gallery{position:static;height:400px;}.product-info{max-height:none;}}
+  @media(max-width:768px){nav,.breadcrumb,.reviews-section,.related-section{padding-left:24px;padding-right:24px;}.product-info{padding:32px 24px;}.reviews-grid{grid-template-columns:1fr;}.related-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<nav>
+  <a href="index.html" class="nav-logo">EXPECTATIONS</a>
+  <ul class="nav-links">
+    <li><a href="index.html#products">Shop</a></li>
+    <li><a href="tryon.html">Try-On</a></li>
+  </ul>
+  <button class="nav-bag" id="bagBtn">Bag (0)</button>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a><span class="sep">›</span>
+  <a href="index.html#products">Shop</a><span class="sep">›</span>
+  <span class="current">Archive Oversized Hoodie</span>
+</div>
+
+<div class="product-layout">
+  <!-- GALLERY -->
+  <div class="gallery">
+    <div class="gallery-thumbs">
+      <div class="thumb active"><div class="thumb-text">FRONT</div></div>
+      <div class="thumb"><div class="thumb-text">BACK</div></div>
+      <div class="thumb"><div class="thumb-text">DETAIL</div></div>
+      <div class="thumb"><div class="thumb-text">FIT</div></div>
+      <div class="thumb"><div class="thumb-text">TAG</div></div>
+    </div>
+    <div class="gallery-main">
+      <div class="main-img-placeholder">
+        <div class="big-text">ARCHIVE<br>HOODIE</div>
+        <p style="font-size:11px;color:var(--muted);letter-spacing:.2em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;margin-top:16px">Add product photos here</p>
+      </div>
+      <div class="badge-new">New In</div>
+      <button class="badge-zoom">⊕ Zoom</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT INFO -->
+  <div class="product-info">
+    <div class="product-label">SS26 Collection</div>
+    <div class="product-name">Archive Oversized Hoodie</div>
+
+    <div class="product-price-row">
+      <div class="product-price">$89.00</div>
+      <div class="stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        <span class="review-count">(24 reviews)</span>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:var(--light);line-height:1.75;margin-bottom:24px">Heavyweight oversized fit in washed cotton fleece. Dropped shoulders, extended body length, and raw-edge hem. A cornerstone piece.</p>
+
+    <!-- COLOUR -->
+    <div class="selector-label">Colour — <span id="colourName" style="color:var(--white)">Washed Black</span></div>
+    <div class="color-row">
+      <div class="color-swatch active" style="background:#1a1a1a" onclick="selectColour(this,'Washed Black')"></div>
+      <div class="color-swatch" style="background:#f0ede6" onclick="selectColour(this,'Off White')"></div>
+      <div class="color-swatch" style="background:#7a6045" onclick="selectColour(this,'Camel')"></div>
+      <div class="color-swatch" style="background:#3d4a3d" onclick="selectColour(this,'Olive')"></div>
+    </div>
+
+    <!-- SIZE -->
+    <div class="selector-label">Size — <span id="sizeName" style="color:var(--white)">Select a size</span></div>
+    <div class="size-row" id="sizeRow">
+      <button class="size-btn" onclick="selectSize(this,'XS')">XS</button>
+      <button class="size-btn" onclick="selectSize(this,'S')">S</button>
+      <button class="size-btn" onclick="selectSize(this,'M')">M</button>
+      <button class="size-btn" onclick="selectSize(this,'L')">L</button>
+      <button class="size-btn soldout" onclick="selectSize(this,'XL')">XL</button>
+    </div>
+    <a href="size-guide.html" class="size-guide-link">View size guide →</a>
+
+    <button class="add-btn" id="addBtn" onclick="addToCart()">Add to Bag — $89.00</button>
+    <button class="try-btn" onclick="window.location='tryon.html?product=Archive+Oversized+Hoodie&price=89'">✦ Try On with AI</button>
+
+    <div class="guarantees">
+      <div class="guarantee"><div class="guarantee-icon">🔒</div><div class="guarantee-text">Secure Payment</div></div>
+      <div class="guarantee"><div class="guarantee-icon">↩</div><div class="guarantee-text">30 Day Returns</div></div>
+      <div class="guarantee"><div class="guarantee-icon">📦</div><div class="guarantee-text">Ships in 1–2 Days</div></div>
+    </div>
+
+    <!-- ACCORDION -->
+    <div class="accordion-item" onclick="toggleAccordion(this)">
+      <button class="accordion-header">Product Details <span class="accordion-icon">+</span></button>
+      <div class="accordion-body">
+        <ul>
+          <li>380gsm heavyweight cotton fleece</li>
+          <li>Garment-washed for a lived-in feel</li>
+          <li>Dropped shoulder construction</li>
+          <li>Raw-edge hem and cuffs</li>
+          <li>Kangaroo pocket</li>
+          <li>Ribbed hood with drawcord</li>
+          <li>Embroidered EXPECTATIONS logo at chest</li>
+          <li>Oversized fit — model is 183cm wearing size M</li>
+        </ul>
+      </div>
+    </div>
+    <div class="accordion-item" onclick="toggleAccordion(this)">
+      <button class="accordion-header">Materials & Care <span class="accordion-icon">+</span></button>
+      <div class="accordion-body">
+        <ul>
+          <li>100% Heavyweight Cotton (380gsm)</li>
+          <li>Machine wash cold, gentle cycle</li>
+          <li>Tumble dry low or hang dry (recommended)</li>
+          <li>Do not bleach</li>
+          <li>Iron on low heat, inside out</li>
+          <li>Expect 2–3% shrinkage after first wash</li>
+        </ul>
+      </div>
+    </div>
+    <div class="accordion-item" onclick="toggleAccordion(this)">
+      <button class="accordion-header">Shipping & Returns <span class="accordion-icon">+</span></button>
+      <div class="accordion-body">
+        <p>Free standard shipping on all orders. Express and next-day available at checkout. Ships within 1–2 business days. Free size exchanges within 30 days. <a href="returns.html" style="color:var(--gold)">Full returns policy →</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="reviews-section">
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;gap:12px;">Customer Reviews<span style="flex:1;height:1px;background:var(--border)"></span></div>
+  <div class="reviews-header">
+    <div class="reviews-score">
+      <div class="score-num">4.9</div>
+      <div class="score-meta">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p>Based on 24 reviews</p>
+      </div>
+    </div>
+    <button class="write-review-btn">Write a Review</button>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-top"><div><div class="reviewer-name">James O.</div><div class="review-date">May 2025</div></div><div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div></div>
+      <p class="review-text">This thing is perfect. Quality is insane for the price — the fleece is super heavy and the wash gives it an aged look straight out the box. Sized down to S and it's exactly the fit I wanted.</p>
+      <div class="review-size">Size: S · Height: 178cm</div>
+      <div class="verified">✓ Verified Purchase</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top"><div><div class="reviewer-name">Sofia M.</div><div class="review-date">May 2025</div></div><div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div></div>
+      <p class="review-text">Ordered M and it fits exactly how it looks on the site. The material is incredibly soft and the details on the hood are clean. Arrived in 4 days with standard shipping.</p>
+      <div class="review-size">Size: M · Height: 168cm</div>
+      <div class="verified">✓ Verified Purchase</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top"><div><div class="reviewer-name">Kai N.</div><div class="review-date">April 2025</div></div><div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div></div>
+      <p class="review-text">Really solid hoodie. The washed black colour is more of a dark charcoal in person which I actually prefer. Would've liked XL to be in stock but M works.</p>
+      <div class="review-size">Size: M · Height: 190cm</div>
+      <div class="verified">✓ Verified Purchase</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top"><div><div class="reviewer-name">Amara D.</div><div class="review-date">April 2025</div></div><div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div></div>
+      <p class="review-text">EXPECTATIONS packaging is clean. The hoodie itself is everything. You can tell this isn't fast fashion — the construction is solid and nothing feels cheap. Will be back for more.</p>
+      <div class="review-size">Size: S · Height: 163cm</div>
+      <div class="verified">✓ Verified Purchase</div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="related-section">
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;gap:12px;">You May Also Like<span style="flex:1;height:1px;background:var(--border)"></span></div>
+  <div class="related-grid">
+    <a href="product.html" style="text-decoration:none;color:inherit"><div class="related-card"><div class="related-img"><div class="related-img-text">LOGO TEE</div></div><div class="related-info"><div class="related-name">Expectations Logo Tee</div><div class="related-price">$45.00</div></div></div></a>
+    <a href="product.html" style="text-decoration:none;color:inherit"><div class="related-card"><div class="related-img"><div class="related-img-text">CLUB JACKET</div></div><div class="related-info"><div class="related-name">Club Jacket</div><div class="related-price">$165.00</div></div></div></a>
+    <a href="product.html" style="text-decoration:none;color:inherit"><div class="related-card"><div class="related-img"><div class="related-img-text">LONGSLEEVE</div></div><div class="related-info"><div class="related-name">Archive Longsleeve</div><div class="related-price">$58.00</div></div></div></a>
+    <a href="product.html" style="text-decoration:none;color:inherit"><div class="related-card"><div class="related-img"><div class="related-img-text">CARGO</div></div><div class="related-info"><div class="related-name">Shell Cargo Pants</div><div class="related-price">$110.00</div></div></div></a>
+  </div>
+</div>
+
+<script>
+  const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+  let mx=0,my=0,selSize=null,bagCount=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  setInterval(()=>{curR.style.left=mx+'px';curR.style.top=my+'px';},80);
+
+  function selectColour(el, name) {
+    document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('colourName').textContent = name;
+  }
+  function selectSize(el, size) {
+    document.querySelectorAll('.size-btn').forEach(s=>s.classList.remove('active'));
+    el.classList.add('active');
+    selSize = size;
+    document.getElementById('sizeName').textContent = size;
+  }
+  function addToCart() {
+    if (!selSize) { document.getElementById('sizeName').style.color='var(--red)'; setTimeout(()=>document.getElementById('sizeName').style.color='var(--white)',1500); return; }
+    bagCount++;
+    document.getElementById('bagBtn').textContent = `Bag (${bagCount})`;
+    const btn = document.getElementById('addBtn');
+    btn.textContent = '✓ Added to Bag';
+    btn.style.background = 'var(--green)';
+    setTimeout(()=>{ btn.textContent='Add to Bag — $89.00'; btn.style.background=''; },2000);
+  }
+  function toggleAccordion(item) {
+    item.classList.toggle('open');
+  }
+  function selectThumb(el) {
+    document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  document.querySelectorAll('.thumb').forEach(t=>t.addEventListener('click',()=>selectThumb(t)));
+</script>
+</body>
+</html>

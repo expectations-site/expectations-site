@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXPECTATIONS — AI Try-On</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;1,300&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #080808;
+    --off:     #111214;
+    --card:    #161618;
+    --border:  #1e1e20;
+    --white:   #f2f0ec;
+    --muted:   #555;
+    --light:   #999;
+    --gold:    #c9a84c;
+    --gold-lo: rgba(201,168,76,.10);
+    --gold-hi: rgba(201,168,76,.25);
+    --green:   #4caf7a;
+    --red:     #e05555;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  #cur  { position:fixed; width:7px;  height:7px;  background:var(--white); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .15s,background .2s; }
+  #curR { position:fixed; width:34px; height:34px; border:1px solid rgba(255,255,255,.25); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .12s ease-out,top .12s ease-out,width .25s,height .25s; }
+  body a, body button { cursor:none; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:800;
+    display: flex; align-items:center; justify-content:space-between;
+    padding: 22px 52px;
+    background: linear-gradient(to bottom, rgba(8,8,8,.95) 0%, transparent 100%);
+    backdrop-filter: blur(0px);
+  }
+  .nav-logo {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:18px; letter-spacing:.35em;
+    color:var(--white); text-decoration:none;
+  }
+  .nav-links { display:flex; gap:36px; list-style:none; }
+  .nav-links a {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--white); text-decoration:none; opacity:.55; transition:opacity .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { opacity:1; }
+  .nav-links a.active { color:var(--gold); }
+  .nav-cart {
+    display:flex; align-items:center; gap:6px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--white); opacity:.6; transition:opacity .2s;
+    background:none; border:none;
+  }
+  .nav-cart:hover { opacity:1; }
+
+  /* ── HERO BANNER ── */
+  .hero-banner {
+    height: 42vh; min-height:320px;
+    display: flex; flex-direction:column;
+    align-items:center; justify-content:flex-end;
+    padding-bottom: 52px;
+    position: relative; overflow:hidden;
+    background: var(--black);
+  }
+  .hero-banner::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(201,168,76,.06) 0%, transparent 70%);
+  }
+  /* animated scanlines */
+  .hero-banner::after {
+    content:'';
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,.012) 3px, rgba(255,255,255,.012) 4px);
+    pointer-events:none;
+  }
+  .hero-eyebrow {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.45em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:16px; position:relative;
+    animation: fadeSlideUp .9s .1s both;
+  }
+  .hero-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(56px,10vw,130px);
+    line-height:.9; letter-spacing:.03em;
+    text-align:center; position:relative;
+    animation: fadeSlideUp .9s .2s both;
+  }
+  .hero-title span { color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.2); }
+  .hero-sub {
+    font-family:'Barlow',sans-serif; font-weight:300;
+    font-size:13px; color:var(--light); margin-top:18px;
+    letter-spacing:.06em; position:relative;
+    animation: fadeSlideUp .9s .35s both;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity:0; transform:translateY(28px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── MARQUEE ── */
+  .ticker {
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:12px 0; overflow:hidden; white-space:nowrap;
+  }
+  .ticker-track {
+    display:inline-flex;
+    animation: ticker 22s linear infinite;
+  }
+  .ticker-item {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--muted); padding:0 36px;
+  }
+  .ticker-item .dot { color:var(--gold); margin:0 6px; }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── LAYOUT ── */
+  .app {
+    display: grid;
+    grid-template-columns: 380px 1fr 380px;
+    gap: 2px;
+    min-height: calc(100vh - 42vh - 42px);
+    background: var(--border);
+  }
+
+  /* ── PANEL SHARED ── */
+  .panel {
+    background: var(--black);
+    padding: 40px 36px;
+    display: flex; flex-direction:column; gap:28px;
+  }
+
+  .panel-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9px; letter-spacing:.4em; text-transform:uppercase;
+    color:var(--gold); display:flex; align-items:center; gap:12px;
+  }
+  .panel-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .panel-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:28px; letter-spacing:.06em; line-height:1;
+  }
+
+  /* ── LEFT PANEL — PRODUCT SELECTOR ── */
+  .product-list {
+    display:flex; flex-direction:column; gap:2px;
+    overflow-y:auto; max-height:540px;
+    scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+  }
+
+  .product-item {
+    display:flex; align-items:center; gap:16px;
+    padding:14px 16px;
+    border:1px solid transparent;
+    background:var(--card);
+    transition:all .2s;
+    position:relative; overflow:hidden;
+  }
+  .product-item:hover { border-color:var(--border); background:#1a1a1c; }
+  .product-item.selected { border-color:var(--gold); background:var(--gold-lo); }
+  .product-item.selected::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--gold);
+  }
+
+  .product-thumb {
+    width:52px; height:64px; flex-shrink:0;
+    background:var(--off); position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .product-thumb-text {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:9px; letter-spacing:.08em; text-align:center;
+    color:rgba(255,255,255,.15); line-height:1.2;
+  }
+  .product-thumb.hoodie  { background:linear-gradient(135deg,#1e1e20,#252525); }
+  .product-thumb.tee     { background:linear-gradient(135deg,#1a1a2a,#20202e); }
+  .product-thumb.jacket  { background:linear-gradient(135deg,#1a1510,#252010); }
+  .product-thumb.cargo   { background:linear-gradient(135deg,#121a12,#161e16); }
+  .product-thumb.cap     { background:linear-gradient(135deg,#1a1520,#1e1828); }
+  .product-thumb.longsleeve { background:linear-gradient(135deg,#0d1a1a,#101e1e); }
+
+  .product-meta { flex:1; min-width:0; }
+  .product-meta .name {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .product-meta .price { font-size:11px; color:var(--muted); margin-top:3px; }
+
+  .product-sel-icon {
+    width:20px; height:20px; border-radius:50%;
+    border:1px solid var(--border); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; transition:all .2s;
+  }
+  .product-item.selected .product-sel-icon {
+    background:var(--gold); border-color:var(--gold); color:var(--black);
+  }
+
+  /* size chips */
+  .size-chips { display:flex; gap:4px; flex-wrap:wrap; }
+  .size-chip {
+    padding:4px 10px;
+    border:1px solid var(--border);
+    background:transparent; color:var(--light);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+    transition:all .2s;
+  }
+  .size-chip:hover { border-color:var(--white); color:var(--white); }
+  .size-chip.active { background:var(--white); color:var(--black); border-color:var(--white); }
+
+  /* ── CENTER PANEL — CANVAS ── */
+  .canvas-panel {
+    background: var(--off);
+    display: flex; flex-direction:column;
+  }
+
+  .canvas-top {
+    padding:24px 28px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .canvas-status {
+    display:flex; align-items:center; gap:8px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--light);
+  }
+  .status-led {
+    width:7px; height:7px; border-radius:50%; background:var(--muted);
+    transition:background .3s;
+  }
+  .status-led.ready  { background:var(--green); animation:ledPulse 2s ease-in-out infinite; }
+  .status-led.busy   { background:var(--gold);  animation:ledPulse .6s ease-in-out infinite; }
+  .status-led.done   { background:var(--green); }
+  .status-led.error  { background:var(--red);   }
+
+  @keyframes ledPulse {
+    0%,100% { opacity:1; } 50% { opacity:.35; }
+  }
+
+  .canvas-actions { display:flex; gap:8px; }
+  .canvas-btn {
+    padding:6px 14px;
+    border:1px solid var(--border); background:transparent;
+    color:var(--light);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+    transition:all .2s;
+  }
+  .canvas-btn:hover { border-color:var(--white); color:var(--white); }
+  .canvas-btn.gold  { border-color:var(--gold); color:var(--gold); }
+  .canvas-btn.gold:hover { background:var(--gold-lo); }
+
+  .canvas-area {
+    flex:1; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    padding:32px; min-height:500px;
+    overflow:hidden;
+  }
+
+  /* idle state */
+  .canvas-idle {
+    display:flex; flex-direction:column; align-items:center; gap:20px;
+    text-align:center; transition:opacity .3s;
+  }
+  .canvas-idle.hidden { opacity:0; pointer-events:none; }
+
+  .idle-ring {
+    width:120px; height:120px; border-radius:50%;
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .idle-ring::before {
+    content:''; position:absolute; inset:-8px;
+    border-radius:50%; border:1px dashed rgba(255,255,255,.07);
+    animation:idleSpin 12s linear infinite;
+  }
+  @keyframes idleSpin { to { transform:rotate(360deg); } }
+
+  .idle-icon { font-size:36px; opacity:.3; }
+  .idle-text {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--muted);
+  }
+  .idle-sub { font-size:12px; color:var(--muted); max-width:240px; line-height:1.6; }
+
+  /* result image */
+  #resultWrap {
+    position:absolute; inset:32px;
+    display:none; flex-direction:column;
+    align-items:center; justify-content:center; gap:0;
+  }
+  #resultWrap.show { display:flex; }
+
+  #resultImg {
+    max-width:100%; max-height:420px;
+    object-fit:contain;
+    border:1px solid var(--border);
+    animation:imgReveal .6s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes imgReveal {
+    from { opacity:0; transform:scale(.97); }
+    to   { opacity:1; transform:scale(1); }
+  }
+
+  /* AI description overlay */
+  #aiDesc {
+    width:100%; background:rgba(8,8,8,.92);
+    border-top:1px solid var(--border);
+    padding:16px 20px;
+    font-size:12px; line-height:1.7; color:var(--light);
+    display:none;
+  }
+  #aiDesc.show { display:block; }
+  #aiDesc strong { color:var(--gold); font-weight:400; }
+
+  /* spinner */
+  .spinner-wrap {
+    display:none; flex-direction:column; align-items:center; gap:20px;
+    text-align:center;
+  }
+  .spinner-wrap.show { display:flex; }
+
+  .spinner-outer {
+    width:80px; height:80px; position:relative;
+  }
+  .spinner-ring {
+    position:absolute; inset:0;
+    border-radius:50%;
+    border:1px solid transparent;
+    animation:spin 1.2s linear infinite;
+  }
+  .spinner-ring:nth-child(1) { border-top-color:var(--gold);  animation-duration:1.2s; }
+  .spinner-ring:nth-child(2) { border-right-color:rgba(201,168,76,.35); inset:8px; animation-duration:1.8s; animation-direction:reverse; }
+  .spinner-ring:nth-child(3) { border-bottom-color:rgba(201,168,76,.15); inset:16px; animation-duration:2.4s; }
+
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .spinner-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.35em; text-transform:uppercase; color:var(--gold);
+    animation:labelPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes labelPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+  .spinner-step { font-size:11px; color:var(--muted); }
+
+  /* ── RIGHT PANEL — UPLOAD ── */
+  .upload-zone {
+    border:1px dashed rgba(255,255,255,.1);
+    padding:40px 24px;
+    text-align:center;
+    position:relative; overflow:hidden;
+    transition:border-color .25s, background .25s;
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color:var(--gold); background:var(--gold-lo); }
+  .upload-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .upload-icon { font-size:32px; margin-bottom:12px; opacity:.35; display:block; }
+  .upload-label {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--light);
+  }
+  .upload-hint { font-size:11px; color:var(--muted); margin-top:6px; }
+
+  /* photo preview */
+  #photoPreview {
+    width:100%; aspect-ratio:3/4; object-fit:cover; object-position:top;
+    border:1px solid var(--border); display:none;
+    animation:imgReveal .4s ease both;
+  }
+  #photoPreview.show { display:block; }
+
+  .photo-change {
+    text-align:center; margin-top:8px; position:relative;
+  }
+  .photo-change input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .photo-change-btn {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9px; letter-spacing:.25em; text-transform:uppercase;
+    color:var(--muted); background:none; border:none; transition:color .2s;
+  }
+  .photo-change-btn:hover { color:var(--white); }
+
+  /* generate button */
+  .gen-btn {
+    width:100%; padding:18px;
+    background:var(--white); color:var(--black);
+    border:none;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:20px; letter-spacing:.15em;
+    transition:background .2s, opacity .2s;
+    position:relative; overflow:hidden;
+  }
+  .gen-btn::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(201,168,76,.25), transparent);
+    transform:translateX(-100%);
+    transition:transform .5s;
+  }
+  .gen-btn:hover { background:var(--gold); }
+  .gen-btn:hover::before { transform:translateX(100%); }
+  .gen-btn:disabled { opacity:.35; pointer-events:none; }
+
+  /* tips */
+  .tips { display:flex; flex-direction:column; gap:8px; }
+  .tip {
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:11px; color:var(--muted); line-height:1.5;
+  }
+  .tip-icon { color:var(--gold); flex-shrink:0; margin-top:1px; }
+
+  /* history strip */
+  .history-strip {
+    display:flex; gap:6px; overflow-x:auto;
+    scrollbar-width:none; padding-bottom:4px;
+  }
+  .history-thumb {
+    width:54px; height:72px; flex-shrink:0;
+    object-fit:cover; border:1px solid var(--border);
+    opacity:.5; transition:opacity .2s, border-color .2s;
+    cursor:pointer;
+  }
+  .history-thumb:hover, .history-thumb.current { opacity:1; border-color:var(--gold); }
+
+  /* ── TOAST ── */
+  #toasts {
+    position:fixed; bottom:28px; right:28px;
+    display:flex; flex-direction:column; gap:8px; z-index:900;
+  }
+  .toast {
+    padding:12px 20px;
+    background:var(--card); border:1px solid var(--border); border-left:2px solid var(--gold);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+    animation:toastIn .3s ease, toastOut .3s 2.7s ease forwards;
+    max-width:280px;
+  }
+  .toast.ok  { border-left-color:var(--green); }
+  .toast.err { border-left-color:var(--red); }
+  @keyframes toastIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes toastOut { from{opacity:1} to{opacity:0} }
+
+  /* ── FOOTER STRIP ── */
+  .footer-strip {
+    border-top:1px solid var(--border);
+    padding:20px 52px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .footer-strip p {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);
+  }
+  .sprint-tag {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:9px; letter-spacing:.25em; text-transform:uppercase;
+    padding:4px 12px; border:1px solid var(--gold-hi); color:var(--gold);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:1100px) {
+    .app { grid-template-columns:1fr 1fr; }
+    .canvas-panel { grid-column:1/3; grid-row:1; }
+  }
+  @media(max-width:720px) {
+    nav { padding:18px 24px; }
+    .nav-links { display:none; }
+    .app { grid-template-columns:1fr; }
+    .canvas-panel { grid-column:auto; }
+    .hero-title { font-size:clamp(44px,14vw,80px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="curR"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">EXPECTATIONS</a>
+  <ul class="nav-links">
+    <li><a href="index.html#products">Shop</a></li>
+    <li><a href="tryon.html" class="active">Try-On</a></li>
+    <li><a href="index.html#about">About</a></li>
+  </ul>
+  <button class="nav-cart">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    Bag (0)
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero-banner">
+  <div class="hero-eyebrow">AI-Powered ✦ Virtual Fitting Room</div>
+  <h1 class="hero-title">TRY<span>ON</span></h1>
+  <p class="hero-sub">Upload your photo. See yourself in EXPECTATIONS.</p>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Upload Your Photo <span class="dot">✦</span></span>
+    <span class="ticker-item">Select a Garment <span class="dot">✦</span></span>
+    <span class="ticker-item">Choose Your Size <span class="dot">✦</span></span>
+    <span class="ticker-item">Generate Try-On <span class="dot">✦</span></span>
+    <span class="ticker-item">Add to Cart <span class="dot">✦</span></span>
+    <span class="ticker-item">Powered by Claude AI <span class="dot">✦</span></span>
+    <span class="ticker-item">Upload Your Photo <span class="dot">✦</span></span>
+    <span class="ticker-item">Select a Garment <span class="dot">✦</span></span>
+    <span class="ticker-item">Choose Your Size <span class="dot">✦</span></span>
+    <span class="ticker-item">Generate Try-On <span class="dot">✦</span></span>
+    <span class="ticker-item">Add to Cart <span class="dot">✦</span></span>
+    <span class="ticker-item">Powered by Claude AI <span class="dot">✦</span></span>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- LEFT: PRODUCT SELECTOR -->
+  <div class="panel" style="border-right:1px solid var(--border)">
+    <div>
+      <div class="panel-label">Step 01</div>
+      <div class="panel-title">Select<br>Garment</div>
+    </div>
+
+    <div class="product-list" id="productList">
+      <!-- filled by JS -->
+    </div>
+
+    <div id="sizeSection" style="display:none">
+      <div class="panel-label" style="margin-bottom:12px">Select Size</div>
+      <div class="size-chips" id="sizeChips"></div>
+    </div>
+  </div>
+
+  <!-- CENTER: CANVAS -->
+  <div class="canvas-panel">
+    <div class="canvas-top">
+      <div class="canvas-status">
+        <div class="status-led" id="statusLed"></div>
+        <span id="statusText">Waiting for input</span>
+      </div>
+      <div class="canvas-actions">
+        <button class="canvas-btn gold" id="downloadBtn" style="display:none" onclick="downloadResult()">↓ Save</button>
+        <button class="canvas-btn" id="resetBtn" onclick="resetCanvas()">Reset</button>
+      </div>
+    </div>
+
+    <div class="canvas-area">
+      <!-- IDLE -->
+      <div class="canvas-idle" id="idleState">
+        <div class="idle-ring">
+          <div class="idle-icon">✦</div>
+        </div>
+        <div class="idle-text">Virtual Fitting Room</div>
+        <p class="idle-sub">Select a garment on the left, upload your photo on the right, then generate your try-on.</p>
+      </div>
+
+      <!-- SPINNER -->
+      <div class="spinner-wrap" id="spinnerWrap">
+        <div class="spinner-outer">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+        </div>
+        <div class="spinner-label">Generating…</div>
+        <div class="spinner-step" id="spinnerStep">Analyzing your photo</div>
+      </div>
+
+      <!-- RESULT -->
+      <div id="resultWrap">
+        <img id="resultImg" src="" alt="Try-on result">
+        <div id="aiDesc"></div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div style="padding:16px 28px; border-top:1px solid var(--border); display:none" id="historyBar">
+      <div class="panel-label" style="margin-bottom:10px">Previous Looks</div>
+      <div class="history-strip" id="historyStrip"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: UPLOAD + GENERATE -->
+  <div class="panel" style="border-left:1px solid var(--border)">
+    <div>
+      <div class="panel-label">Step 02</div>
+      <div class="panel-title">Your<br>Photo</div>
+    </div>
+
+    <!-- Upload zone / preview -->
+    <div id="uploadSection">
+      <div class="upload-zone" id="uploadZone"
+           ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+        <input type="file" accept="image/*" id="photoInput" onchange="handlePhoto(event)">
+        <span class="upload-icon">↑</span>
+        <div class="upload-label">Drop photo here</div>
+        <div class="upload-hint">or tap to upload · JPG, PNG, WEBP</div>
+      </div>
+    </div>
+
+    <div id="previewSection" style="display:none">
+      <img id="photoPreview" class="show" src="" alt="Your photo">
+      <div class="photo-change">
+        <input type="file" accept="image/*" id="photoChange" onchange="handlePhoto(event)">
+        <button class="photo-change-btn">✕ Change photo</button>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips">
+      <div class="panel-label" style="margin-bottom:4px">Best Results</div>
+      <div class="tip"><span class="tip-icon">✦</span>Full body or torso photo works best</div>
+      <div class="tip"><span class="tip-icon">✦</span>Face the camera directly</div>
+      <div class="tip"><span class="tip-icon">✦</span>Good lighting, plain background</div>
+      <div class="tip"><span class="tip-icon">✦</span>Select your correct size first</div>
+    </div>
+
+    <!-- Generate -->
+    <button class="gen-btn" id="genBtn" disabled onclick="generate()">
+      Generate Try-On
+    </button>
+
+    <!-- Add to cart (shown after result) -->
+    <button class="gen-btn" id="cartBtn" style="display:none;background:var(--gold);color:var(--black)" onclick="addToCart()">
+      Add to Cart
+    </button>
+
+    <div id="selectionSummary" style="display:none">
+      <div class="panel-label" style="margin-bottom:10px">Your Selection</div>
+      <div style="background:var(--card);border:1px solid var(--border);padding:14px 16px">
+        <div id="summaryProduct" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px"></div>
+        <div id="summarySize" style="font-size:11px;color:var(--muted)"></div>
+        <div id="summaryPrice" style="font-size:13px;color:var(--gold);margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER STRIP -->
+<div class="footer-strip">
+  <p>© 2025 Expectations — All rights reserved</p>
+  <div class="sprint-tag">Sprint 3 · AI Try-On</div>
+</div>
+
+<!-- TOASTS -->
+<div id="toasts"></div>
+
+<script>
+// ── PRODUCTS ──
+const products = [
+  { id:'hoodie-arch', name:'Archive Oversized Hoodie', price:'$89', sizes:['XS','S','M','L','XL'], type:'hoodie', desc:'heavyweight oversized fit in washed cotton fleece' },
+  { id:'tee-logo',    name:'Expectations Logo Tee',    price:'$45', sizes:['XS','S','M','L','XL'], type:'tee',    desc:'relaxed boxy cut with signature chest print' },
+  { id:'tee-naif',   name:'Naif Washed Tee',           price:'$48', sizes:['XS','S','M','L','XL'], type:'tee',    desc:'garment-dyed with distressed raw hem' },
+  { id:'jacket-club',name:'Expectations Club Jacket',  price:'$165',sizes:['XS','S','M','L','XL'], type:'jacket', desc:'technical shell with embroidered branding' },
+  { id:'cargo-shell',name:'Shell Cargo Pants',         price:'$110',sizes:['XS','S','M','L','XL'], type:'cargo',  desc:'wide-leg cargo with utility pockets' },
+  { id:'longsleeve', name:'Archive Longsleeve',        price:'$58', sizes:['XS','S','M','L','XL'], type:'longsleeve', desc:'midweight jersey with back graphic print' },
+  { id:'cap',        name:'6-Panel Cap',               price:'$38', sizes:['OS'],                  type:'cap',    desc:'unstructured 6-panel in brushed cotton' },
+];
+
+// ── STATE ──
+let state = { product:null, size:null, photoFile:null, photoB64:null, photoType:null, history:[] };
+
+// ── RENDER PRODUCTS ──
+function renderProducts() {
+  document.getElementById('productList').innerHTML = products.map(p => `
+    <div class="product-item" id="pi-${p.id}" onclick="selectProduct('${p.id}')">
+      <div class="product-thumb ${p.type}">
+        <div class="product-thumb-text">${p.name.split(' ').slice(0,2).join('\n')}</div>
+      </div>
+      <div class="product-meta">
+        <div class="name">${p.name}</div>
+        <div class="price">${p.price}</div>
+      </div>
+      <div class="product-sel-icon" id="psi-${p.id}"></div>
+    </div>
+  `).join('');
+}
+
+function selectProduct(id) {
+  state.product = products.find(p => p.id === id);
+  state.size = null;
+  document.querySelectorAll('.product-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('pi-' + id).classList.add('selected');
+  renderSizes();
+  updateSummary();
+  updateGenBtn();
+  toast('Garment selected');
+}
+
+function renderSizes() {
+  const p = state.product;
+  if (!p) return;
+  document.getElementById('sizeSection').style.display = 'block';
+  document.getElementById('sizeChips').innerHTML = p.sizes.map(s =>
+    `<button class="size-chip" onclick="selectSize('${s}',this)">${s}</button>`
+  ).join('');
+}
+
+function selectSize(s, el) {
+  state.size = s;
+  document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateSummary();
+  updateGenBtn();
+}
+
+// ── PHOTO UPLOAD ──
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  processPhoto(file);
+}
+
+function dropFile(e) {
+  e.preventDefault();
+  dragLeave(e);
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processPhoto(file);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag');
+}
+function dragLeave(e) {
+  document.getElementById('uploadZone').classList.remove('drag');
+}
+
+function processPhoto(file) {
+  state.photoFile = file;
+  state.photoType = file.type;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    state.photoB64 = dataUrl.split(',')[1];
+    // show preview
+    document.getElementById('uploadSection').style.display = 'none';
+    document.getElementById('previewSection').style.display = 'block';
+    document.getElementById('photoPreview').src = dataUrl;
+    updateGenBtn();
+    updateSummary();
+    setStatus('ready');
+    toast('Photo loaded');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── SUMMARY ──
+function updateSummary() {
+  const sec = document.getElementById('selectionSummary');
+  if (state.product) {
+    sec.style.display = 'block';
+    document.getElementById('summaryProduct').textContent = state.product.name;
+    document.getElementById('summarySize').textContent = state.size ? 'Size: ' + state.size : 'No size selected';
+    document.getElementById('summaryPrice').textContent = state.product.price;
+  } else {
+    sec.style.display = 'none';
+  }
+}
+
+function updateGenBtn() {
+  const ready = state.product && state.size && state.photoB64;
+  document.getElementById('genBtn').disabled = !ready;
+}
+
+// ── STATUS ──
+function setStatus(s, text) {
+  const led = document.getElementById('statusLed');
+  const label = document.getElementById('statusText');
+  led.className = 'status-led ' + (s || '');
+  if (text) label.textContent = text;
+  else {
+    const map = { ready:'Ready to generate', busy:'Generating try-on…', done:'Try-on complete', error:'Something went wrong', '':'Waiting for input' };
+    label.textContent = map[s] || '';
+  }
+}
+
+// ── GENERATE ──
+const spinnerSteps = [
+  'Analysing your photo…',
+  'Understanding garment style…',
+  'Compositing virtual outfit…',
+  'Refining fit and drape…',
+  'Finalising your look…',
+];
+
+async function generate() {
+  if (!state.product || !state.size || !state.photoB64) return;
+
+  // UI: show spinner
+  document.getElementById('idleState').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('aiDesc').classList.remove('show');
+  document.getElementById('spinnerWrap').classList.add('show');
+  document.getElementById('downloadBtn').style.display = 'none';
+  document.getElementById('cartBtn').style.display = 'none';
+  document.getElementById('genBtn').style.display = 'none';
+  setStatus('busy');
+
+  // Cycle spinner steps
+  let stepIdx = 0;
+  const stepInterval = setInterval(() => {
+    document.getElementById('spinnerStep').textContent = spinnerSteps[stepIdx % spinnerSteps.length];
+    stepIdx++;
+  }, 1800);
+
+  const prompt = `You are an expert fashion stylist and AI virtual try-on system for EXPECTATIONS, a premium streetwear brand.
+
+The customer has uploaded a photo. They want to virtually try on: "${state.product.name}" (size ${state.size}) — described as: "${state.product.desc}".
+
+Analyse the person in the photo carefully (their body shape, proportions, skin tone, posture, current clothing style) and provide:
+
+1. A vivid, editorial-style description of exactly how the "${state.product.name}" would look ON THIS SPECIFIC PERSON — describe the fit, silhouette, drape, how it interacts with their build, and the overall aesthetic impact. Be specific to what you see in the photo. Write this as a confident fashion stylist would, in 3-4 sentences.
+
+2. A fit recommendation: does size ${state.size} look right for them, or would you suggest going up or down?
+
+3. A one-line style note: what to pair it with.
+
+Format your response exactly as:
+LOOK: [editorial description]
+FIT: [fit recommendation]  
+STYLE: [pairing suggestion]`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: state.photoType || 'image/jpeg', data: state.photoB64 }
+            },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    clearInterval(stepInterval);
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error.message);
+
+    const raw = (data.content || []).map(b => b.text || '').join('').trim();
+
+    // Parse sections
+    const look  = (raw.match(/LOOK:\s*(.+?)(?=\n(?:FIT|STYLE):|$)/s) || [])[1]?.trim() || raw;
+    const fit   = (raw.match(/FIT:\s*(.+?)(?=\n(?:LOOK|STYLE):|$)/s) || [])[1]?.trim() || '';
+    const style = (raw.match(/STYLE:\s*(.+?)(?=\n(?:LOOK|FIT):|$)/s) || [])[1]?.trim() || '';
+
+    // Show result: use the uploaded photo as the base (in a real integration
+    // this would be the composited image from a try-on API like Fashn.ai)
+    document.getElementById('spinnerWrap').classList.remove('show');
+
+    const resultImgEl = document.getElementById('resultImg');
+    resultImgEl.src = URL.createObjectURL(state.photoFile);
+    document.getElementById('resultWrap').classList.add('show');
+
+    // AI description
+    const descEl = document.getElementById('aiDesc');
+    descEl.innerHTML = `
+      <strong>${state.product.name} — Size ${state.size}</strong><br>
+      ${look}
+      ${fit ? `<br><br><strong style="color:var(--light)">Fit:</strong> ${fit}` : ''}
+      ${style ? `<br><strong style="color:var(--light)">Style it with:</strong> ${style}` : ''}
+    `;
+    descEl.classList.add('show');
+
+    // History
+    addToHistory(URL.createObjectURL(state.photoFile));
+
+    setStatus('done');
+    document.getElementById('downloadBtn').style.display = 'block';
+    document.getElementById('cartBtn').style.display = 'block';
+    document.getElementById('genBtn').style.display = 'block';
+    toast('Try-on generated!', 'ok');
+
+  } catch (err) {
+    clearInterval(stepInterval);
+    document.getElementById('spinnerWrap').classList.remove('show');
+    document.getElementById('idleState').classList.remove('hidden');
+    setStatus('error', 'Generation failed');
+    document.getElementById('genBtn').style.display = 'block';
+    toast('Error: ' + (err.message || 'Try again'), 'err');
+  }
+}
+
+// ── HISTORY ──
+function addToHistory(src) {
+  state.history.unshift(src);
+  if (state.history.length > 5) state.history.pop();
+
+  const bar = document.getElementById('historyBar');
+  const strip = document.getElementById('historyStrip');
+  bar.style.display = 'block';
+  strip.innerHTML = state.history.map((s, i) =>
+    `<img class="history-thumb ${i===0?'current':''}" src="${s}" onclick="showHistoryItem(${i})">`
+  ).join('');
+}
+
+function showHistoryItem(i) {
+  document.getElementById('resultImg').src = state.history[i];
+  document.getElementById('resultWrap').classList.add('show');
+  document.querySelectorAll('.history-thumb').forEach((el,j) => el.classList.toggle('current', j===i));
+}
+
+// ── RESET ──
+function resetCanvas() {
+  state.product = null; state.size = null;
+  state.photoFile = null; state.photoB64 = null; state.photoType = null;
+  document.querySelectorAll('.product-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('sizeSection').style.display = 'none';
+  document.getElementById('uploadSection').style.display = 'block';
+  document.getElementById('previewSection').style.display = 'none';
+  document.getElementById('photoPreview').src = '';
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('aiDesc').classList.remove('show');
+  document.getElementById('spinnerWrap').classList.remove('show');
+  document.getElementById('idleState').classList.remove('hidden');
+  document.getElementById('downloadBtn').style.display = 'none';
+  document.getElementById('cartBtn').style.display = 'none';
+  document.getElementById('genBtn').style.display = 'block';
+  document.getElementById('genBtn').disabled = true;
+  document.getElementById('selectionSummary').style.display = 'none';
+  setStatus('');
+}
+
+// ── DOWNLOAD ──
+function downloadResult() {
+  const a = document.createElement('a');
+  a.href = document.getElementById('resultImg').src;
+  a.download = `expectations-tryon-${state.product?.id || 'look'}.jpg`;
+  a.click();
+  toast('Saved to downloads', 'ok');
+}
+
+function addToCart() {
+  if (!state.product || !state.size) return;
+  const params = new URLSearchParams({
+    product: state.product.name,
+    size: state.size,
+    price: state.product.price.replace('$','')
+  });
+  toast('Adding to bag…', 'ok');
+  setTimeout(() => { window.location = 'checkout.html?' + params.toString(); }, 800);
+}
+
+// ── TOAST ──
+function toast(msg, type='') {
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const curR = document.getElementById('curR');
+let mx=0, my=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx+'px'; cur.style.top = my+'px';
+});
+setInterval(() => {
+  curR.style.left = mx+'px'; curR.style.top = my+'px';
+}, 80);
+document.querySelectorAll('button,a,.product-item,.size-chip,.history-thumb').forEach(el => {
+  el.addEventListener('mouseenter', () => { curR.style.width='52px'; curR.style.height='52px'; });
+  el.addEventListener('mouseleave', () => { curR.style.width='34px'; curR.style.height='34px'; });
+});
+
+// ── INIT ──
+renderProducts();
+setStatus('');
+</script>
+</body>
+</html>

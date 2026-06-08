@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXPECTATIONS — Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#080808;--panel:#0d0d0f;--off:#111214;--card:#141416;--border:#1e1e22;--white:#f2f0ec;--muted:#444;--light:#888;--gold:#c9a84c;--gold-lo:rgba(201,168,76,.10);--gold-hi:rgba(201,168,76,.2);--green:#4caf7a;--green-lo:rgba(76,175,122,.1);--red:#e05555;--red-lo:rgba(224,85,85,.08);--blue:#5598e0;--blue-lo:rgba(85,152,224,.08);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;display:flex;height:100vh;overflow:hidden;}
+
+  /* SIDEBAR */
+  .sidebar{width:220px;min-width:220px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;}
+  .sb-brand{padding:24px 20px 18px;border-bottom:1px solid var(--border);}
+  .sb-brand h1{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.3em;}
+  .sb-brand p{font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-top:2px;}
+  .sb-nav{flex:1;padding:12px 0;}
+  .sb-group{font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);padding:14px 20px 6px;}
+  .sb-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);transition:all .15s;border-left:2px solid transparent;}
+  .sb-item:hover{color:var(--white);background:rgba(255,255,255,.02);}
+  .sb-item.active{color:var(--white);background:var(--gold-lo);border-left-color:var(--gold);}
+  .sb-item svg{width:14px;height:14px;opacity:.7;flex-shrink:0;}
+  .sb-item.active svg{opacity:1;}
+  .sb-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .sb-avatar{width:30px;height:30px;border-radius:50%;background:var(--gold-lo);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--gold);}
+  .sb-user-name{font-size:12px;}
+  .sb-user-role{font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+
+  /* MAIN */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  .topbar{height:60px;min-height:60px;border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:var(--panel);}
+  .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.12em;display:flex;align-items:center;gap:10px;}
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(76,175,122,.4)}50%{opacity:.6;box-shadow:0 0 0 4px rgba(76,175,122,0)}}
+  .topbar-right{display:flex;gap:8px;align-items:center;}
+  .range-btn{padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;transition:all .2s;}
+  .range-btn:hover{border-color:var(--white);color:var(--white);}
+  .range-btn.active{background:var(--white);color:var(--black);border-color:var(--white);}
+  .export-btn{padding:6px 16px;background:var(--gold);color:var(--black);border:none;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;transition:opacity .2s;}
+  .export-btn:hover{opacity:.85;}
+
+  .content{flex:1;overflow-y:auto;padding:24px 28px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+
+  /* KPI ROW */
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+  .kpi{background:var(--card);border:1px solid var(--border);padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s;}
+  .kpi:hover{border-color:rgba(255,255,255,.08);}
+  .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+  .kpi.gold::before{background:var(--gold);}
+  .kpi.green::before{background:var(--green);}
+  .kpi.blue::before{background:var(--blue);}
+  .kpi.red::before{background:var(--red);}
+  .kpi-label{font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .kpi-value{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;letter-spacing:.02em;}
+  .kpi-delta{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;margin-top:4px;}
+  .kpi-delta.up{color:var(--green);}
+  .kpi-delta.down{color:var(--red);}
+  .kpi-delta.flat{color:var(--muted);}
+
+  /* GRID 2 */
+  .grid-2{display:grid;grid-template-columns:1fr 320px;gap:10px;margin-bottom:16px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+
+  /* CHART CARD */
+  .chart-card{background:var(--card);border:1px solid var(--border);padding:20px;}
+  .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .chart-title{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--light);}
+  .chart-legend{display:flex;gap:16px;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);}
+  .legend-dot{width:6px;height:6px;border-radius:50%;}
+
+  /* BAR CHART */
+  .bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
+  .bar-fill{width:100%;position:relative;transition:height .6s cubic-bezier(.16,1,.3,1);}
+  .bar-fill.revenue{background:var(--gold-lo);border-top:2px solid var(--gold);}
+  .bar-fill.orders{background:rgba(85,152,224,.08);border-top:2px solid var(--blue);}
+  .bar-fill:hover{filter:brightness(1.3);}
+  .bar-col-label{font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  /* LINE CHART */
+  .line-chart-wrap{height:140px;position:relative;}
+  svg.line-chart{width:100%;height:100%;}
+  .chart-y-labels{position:absolute;left:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;}
+  .chart-y-label{font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.1em;color:var(--muted);}
+
+  /* DONUT */
+  .donut-wrap{display:flex;align-items:center;gap:20px;}
+  svg.donut{flex-shrink:0;}
+  .donut-legend{display:flex;flex-direction:column;gap:8px;}
+  .dl-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--light);}
+  .dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .dl-pct{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gold);}
+
+  /* TOP PRODUCTS TABLE */
+  .data-table{width:100%;border-collapse:collapse;}
+  .data-table th{padding:10px 16px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);}
+  .data-table td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;color:var(--light);}
+  tr:hover td{background:rgba(255,255,255,.015);}
+  .prod-tag{display:inline-block;padding:3px 8px;background:var(--gold-lo);border:1px solid var(--gold-hi);font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+  .progress-bar{width:80px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle;}
+  .progress-fill{height:100%;background:var(--gold);border-radius:2px;}
+
+  /* COUNTRY MAP PLACEHOLDER */
+  .world-card{background:var(--card);border:1px solid var(--border);padding:20px;}
+  .country-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+  .country-row{display:flex;align-items:center;gap:10px;}
+  .country-flag{font-size:16px;width:24px;}
+  .country-name{font-size:12px;color:var(--light);flex:1;}
+  .country-bar{flex:2;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+  .country-bar-fill{height:100%;background:var(--gold);border-radius:2px;}
+  .country-pct{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);}
+
+  /* RECENT ORDERS */
+  .orders-card{background:var(--card);border:1px solid var(--border);padding:20px;}
+
+  /* STATUS BADGE */
+  .s-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;}
+  .s-badge.pending{background:rgba(224,184,85,.08);color:#e0b855;border:1px solid rgba(224,184,85,.2);}
+  .s-badge.shipped{background:var(--green-lo);color:var(--green);border:1px solid rgba(76,175,122,.2);}
+  .s-badge.delivered{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);}
+  .s-dot{width:4px;height:4px;border-radius:50%;background:currentColor;}
+
+  @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}}
+  @media(max-width:768px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand"><h1>EXPECTATIONS</h1><p>Brand Analytics</p></div>
+  <nav class="sb-nav">
+    <div class="sb-group">Overview</div>
+    <div class="sb-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
+    </div>
+    <div class="sb-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Orders
+    </div>
+    <div class="sb-group">Products</div>
+    <div class="sb-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Inventory
+    </div>
+    <div class="sb-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Customers
+    </div>
+    <div class="sb-group">Tools</div>
+    <div class="sb-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <a href="manufacturer.html" style="color:inherit;text-decoration:none">Mfg Portal</a>
+    </div>
+    <div class="sb-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      <a href="index.html" style="color:inherit;text-decoration:none">Live Site</a>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-avatar">EO</div>
+    <div><div class="sb-user-name">Brand Owner</div><div class="sb-user-role">Admin</div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">
+      <div class="live-dot"></div>
+      ANALYTICS
+    </div>
+    <div class="topbar-right">
+      <button class="range-btn" onclick="setRange('7d',this)">7D</button>
+      <button class="range-btn active" onclick="setRange('30d',this)">30D</button>
+      <button class="range-btn" onclick="setRange('90d',this)">90D</button>
+      <button class="range-btn" onclick="setRange('1y',this)">1Y</button>
+      <button class="export-btn" onclick="exportCSV()">↓ Export</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi gold">
+        <div class="kpi-label">Total Revenue</div>
+        <div class="kpi-value" id="kpi-revenue">$4,820</div>
+        <div class="kpi-delta up" id="kpi-rev-delta">↑ 34% vs last period</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">Orders</div>
+        <div class="kpi-value" id="kpi-orders">54</div>
+        <div class="kpi-delta up">↑ 18% vs last period</div>
+      </div>
+      <div class="kpi blue">
+        <div class="kpi-label">Avg Order Value</div>
+        <div class="kpi-value" id="kpi-aov">$89</div>
+        <div class="kpi-delta up">↑ $4 vs last period</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Conversion Rate</div>
+        <div class="kpi-value">3.2%</div>
+        <div class="kpi-delta up">↑ 0.4% vs last period</div>
+      </div>
+    </div>
+
+    <!-- REVENUE CHART + DONUT -->
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Revenue & Orders — Daily</div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Revenue</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Orders</div>
+          </div>
+        </div>
+        <div class="bar-chart" id="revenueChart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Revenue by Category</div></div>
+        <div class="donut-wrap" id="donutWrap"></div>
+      </div>
+    </div>
+
+    <!-- 3 SMALL CARDS -->
+    <div class="grid-3">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Visitors (30d)</div></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--white);margin-bottom:4px">1,847</div>
+        <div style="font-size:11px;color:var(--green)">↑ 22% vs last month</div>
+        <div style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px"><span>Instagram</span><span style="color:var(--white)">48%</span></div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:48%;height:100%;background:var(--gold)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:8px 0 6px"><span>Direct</span><span style="color:var(--white)">28%</span></div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:28%;height:100%;background:var(--blue)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:8px 0 6px"><span>TikTok</span><span style="color:var(--white)">16%</span></div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:16%;height:100%;background:var(--green)"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Try-On Usage</div></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--white);margin-bottom:4px">312</div>
+        <div style="font-size:11px;color:var(--green)">↑ Try-ons this month</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>Try-on → Purchase</span><span style="color:var(--gold)">24%</span></div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:24%;height:100%;background:var(--gold)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>Most tried</span><span style="color:var(--white)">Archive Hoodie</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>Avg session</span><span style="color:var(--white)">2.4 items</span></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Customer Metrics</div></div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+          <div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.2em;text-transform:uppercase">Repeat Rate</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--green)">18%</div></div>
+          <div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.2em;text-transform:uppercase">Return Rate</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white)">2.1%</div></div>
+          <div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.2em;text-transform:uppercase">Avg Rating</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold)">4.9</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP PRODUCTS + COUNTRIES -->
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Top Products</div></div>
+        <table class="data-table">
+          <thead><tr><th>Product</th><th>Units</th><th>Revenue</th><th>Share</th></tr></thead>
+          <tbody id="topProductsBody"></tbody>
+        </table>
+      </div>
+      <div class="world-card">
+        <div class="chart-title">Top Markets</div>
+        <div class="country-list" id="countryList"></div>
+      </div>
+    </div>
+
+    <!-- RECENT ORDERS -->
+    <div class="orders-card">
+      <div class="chart-header"><div class="chart-title">Recent Orders</div><a href="manufacturer.html" style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-decoration:none">View All →</a></div>
+      <table class="data-table">
+        <thead><tr><th>Order</th><th>Customer</th><th>Product</th><th>Total</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="recentOrdersBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── DATA ──
+  const datasets = {
+    '7d': {
+      revenue:[120,0,89,210,165,300,178],
+      orders:[1,0,1,2,2,3,2],
+      labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      kpi:{revenue:'$1,062',orders:'11',aov:'$96',delta:'↑ 12%'}
+    },
+    '30d': {
+      revenue:[0,89,0,210,89,165,300,178,0,89,165,300,210,89,178,300,165,89,210,300,178,89,165,300,210,0,89,178,300,165],
+      orders:[0,1,0,2,1,2,3,2,0,1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,0,1,2,3,2],
+      labels:['1','','','4','','','7','','','10','','','13','','','16','','','19','','','22','','','25','','','28','','30'],
+      kpi:{revenue:'$4,820',orders:'54',aov:'$89',delta:'↑ 34%'}
+    },
+    '90d': {
+      revenue:[800,1200,950,1800,1400,2100,1650,2400,2800,1900,3100,2600,3400],
+      orders:[9,13,10,20,16,24,18,27,31,21,35,29,38],
+      labels:['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12','W13'],
+      kpi:{revenue:'$26,150',orders:'291',aov:'$90',delta:'↑ 68%'}
+    },
+    '1y': {
+      revenue:[1200,900,2100,3400,2800,4100,3600,5200,4800,6100,5400,7200],
+      orders:[13,10,23,38,31,46,40,58,54,68,60,80],
+      labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'],
+      kpi:{revenue:'$46,800',orders:'521',aov:'$89',delta:'↑ 128%'}
+    }
+  };
+  let currentRange = '30d';
+
+  const topProducts = [
+    {name:'Archive Hoodie',units:22,revenue:1958,max:22},
+    {name:'Club Jacket',units:8,revenue:1320,max:22},
+    {name:'Shell Cargo',units:10,revenue:1100,max:22},
+    {name:'Logo Tee',units:18,revenue:810,max:22},
+    {name:'Naif Tee',units:9,revenue:432,max:22},
+  ];
+  const countries = [
+    {flag:'🇿🇦',name:'South Africa',pct:28},
+    {flag:'🇺🇸',name:'United States',pct:22},
+    {flag:'🇬🇧',name:'United Kingdom',pct:14},
+    {flag:'🇫🇷',name:'France',pct:10},
+    {flag:'🇯🇵',name:'Japan',pct:8},
+    {flag:'🇳🇬',name:'Nigeria',pct:8},
+    {flag:'🌍',name:'Other',pct:10},
+  ];
+  const recentOrders = [
+    {id:'EXP-003',customer:'Kai Nakamura',product:'Shell Cargo Pants',total:'$110',date:'Jun 5',status:'pending'},
+    {id:'EXP-002',customer:'Sofia Martins',product:'Logo Tee ×2',total:'$90',date:'Jun 4',status:'pending'},
+    {id:'EXP-001',customer:'James Okafor',product:'Archive Hoodie',total:'$89',date:'Jun 4',status:'shipped'},
+    {id:'EXP-004',customer:'Amara Diallo',product:'Club Jacket',total:'$165',date:'Jun 3',status:'shipped'},
+    {id:'EXP-007',customer:'Marcus Bello',product:'Logo Tee ×3',total:'$135',date:'Jun 1',status:'delivered'},
+  ];
+
+  // ── RENDER ──
+  function renderAll() {
+    const d = datasets[currentRange];
+    document.getElementById('kpi-revenue').textContent = d.kpi.revenue;
+    document.getElementById('kpi-orders').textContent = d.kpi.orders;
+    document.getElementById('kpi-aov').textContent = d.kpi.aov;
+    document.getElementById('kpi-rev-delta').textContent = d.kpi.delta + ' vs last period';
+    renderBarChart(d);
+    renderDonut();
+    renderTopProducts();
+    renderCountries();
+    renderRecentOrders();
+  }
+
+  function renderBarChart(d) {
+    const max = Math.max(...d.revenue);
+    const maxOrders = Math.max(...d.orders);
+    const html = d.revenue.map((v,i) => `
+      <div class="bar-col">
+        <div class="bar-fill revenue" style="height:${(v/max)*100}%" title="$${v}"></div>
+        <div class="bar-col-label">${d.labels[i]}</div>
+      </div>
+    `).join('');
+    document.getElementById('revenueChart').innerHTML = html;
+  }
+
+  function renderDonut() {
+    const categories = [
+      {label:'Hoodies',pct:41,color:'#c9a84c'},
+      {label:'Outerwear',pct:27,color:'#5598e0'},
+      {label:'Bottoms',pct:16,color:'#4caf7a'},
+      {label:'Tees',pct:11,color:'#e0b855'},
+      {label:'Accessories',pct:5,color:'#555'},
+    ];
+    const r=54, cx=64, cy=64, stroke=14;
+    let offset=0;
+    const circ = 2*Math.PI*r;
+    const arcs = categories.map(c=>{
+      const len = (c.pct/100)*circ;
+      const arc = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c.color}" stroke-width="${stroke}" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-offset}" transform="rotate(-90,${cx},${cy})" opacity="0.85"/>`;
+      offset += len;
+      return arc;
+    }).join('');
+    const legend = categories.map(c=>
+      `<div class="dl-item"><div class="dl-dot" style="background:${c.color}"></div>${c.label}<span class="dl-pct">${c.pct}%</span></div>`
+    ).join('');
+    document.getElementById('donutWrap').innerHTML = `
+      <svg class="donut" width="128" height="128" viewBox="0 0 128 128">${arcs}</svg>
+      <div class="donut-legend">${legend}</div>
+    `;
+  }
+
+  function renderTopProducts() {
+    document.getElementById('topProductsBody').innerHTML = topProducts.map(p=>`
+      <tr>
+        <td><span class="prod-tag">${p.name}</span></td>
+        <td>${p.units}</td>
+        <td style="color:var(--gold)">$${p.revenue.toLocaleString()}</td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:${(p.units/p.max)*100}%"></div></div></td>
+      </tr>
+    `).join('');
+  }
+
+  function renderCountries() {
+    document.getElementById('countryList').innerHTML = countries.map(c=>`
+      <div class="country-row">
+        <div class="country-flag">${c.flag}</div>
+        <div class="country-name">${c.name}</div>
+        <div class="country-bar"><div class="country-bar-fill" style="width:${c.pct}%"></div></div>
+        <div class="country-pct">${c.pct}%</div>
+      </div>
+    `).join('');
+  }
+
+  function renderRecentOrders() {
+    document.getElementById('recentOrdersBody').innerHTML = recentOrders.map(o=>`
+      <tr>
+        <td style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.12em;color:var(--gold)">${o.id}</td>
+        <td>${o.customer}</td>
+        <td><span class="prod-tag">${o.product}</span></td>
+        <td style="color:var(--gold)">${o.total}</td>
+        <td style="color:var(--muted);font-size:11px">${o.date}</td>
+        <td><span class="s-badge ${o.status}"><span class="s-dot"></span>${o.status}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function setRange(range, btn) {
+    currentRange = range;
+    document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderAll();
+  }
+
+  function exportCSV() {
+    const rows = ['Order,Customer,Product,Total,Date,Status']
+      .concat(recentOrders.map(o=>`${o.id},${o.customer},${o.product},${o.total},${o.date},${o.status}`));
+    const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'expectations_analytics.csv'; a.click();
+  }
+
+  renderAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXPECTATIONS — Manufacturer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --panel: #111214;
+    --card: #16181c;
+    --border: #222428;
+    --white: #f0f0ec;
+    --gray: #666;
+    --light: #aaa;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.12);
+    --green: #4caf7a;
+    --green-dim: rgba(76,175,122,0.12);
+    --red: #e05555;
+    --red-dim: rgba(224,85,85,0.1);
+    --blue: #5598e0;
+    --blue-dim: rgba(85,152,224,0.1);
+    --yellow: #e0b855;
+    --yellow-dim: rgba(224,184,85,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-brand h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.25em;
+    color: var(--white);
+  }
+
+  .sidebar-brand p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 0;
+  }
+
+  .nav-group-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gray);
+    padding: 16px 24px 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.03); }
+
+  .nav-item.active {
+    color: var(--white);
+    background: rgba(201,168,76,0.06);
+    border-left-color: var(--gold);
+  }
+
+  .nav-item svg { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+  .nav-item.active svg { opacity: 1; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-family: 'Barlow', sans-serif;
+  }
+
+  .nav-badge.green { background: var(--green); }
+  .nav-badge.red { background: var(--red); }
+
+  .sidebar-user {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .user-info p { font-size: 12px; font-weight: 400; }
+  .user-info span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .topbar {
+    padding: 0 32px;
+    height: 64px;
+    min-height: 64px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .topbar-left h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.15em;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: livePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(76,175,122,0.4); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(76,175,122,0); }
+  }
+
+  .topbar-right { display: flex; gap: 12px; align-items: center; }
+
+  .topbar-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--light);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .topbar-btn:hover { border-color: var(--white); color: var(--white); }
+  .topbar-btn.primary { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 600; }
+  .topbar-btn.primary:hover { opacity: 0.85; }
+
+  /* ── CONTENT AREA ── */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .stat-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+
+  .stat-sub.up { color: var(--green); }
+  .stat-sub.down { color: var(--red); }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .table-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .table-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .search-input {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    outline: none;
+    width: 200px;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+  .search-input::placeholder { color: var(--gray); }
+
+  .filter-select {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    color: var(--light);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    outline: none;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 12px 24px;
+    text-align: left;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 14px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .order-id {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .customer-info .name { font-weight: 400; font-size: 13px; }
+  .customer-info .email { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+  .product-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,168,76,0.2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .size-badge {
+    padding: 3px 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--light);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .status-badge.pending { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(224,184,85,0.2); }
+  .status-badge.processing { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(85,152,224,0.2); }
+  .status-badge.shipped { background: var(--green-dim); color: var(--green); border: 1px solid rgba(76,175,122,0.2); }
+  .status-badge.delivered { background: rgba(255,255,255,0.05); color: var(--light); border: 1px solid var(--border); }
+  .status-badge.cancelled { background: var(--red-dim); color: var(--red); border: 1px solid rgba(224,85,85,0.2); }
+
+  .status-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .action-row { display: flex; gap: 6px; }
+
+  .action-btn {
+    padding: 5px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--light);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .action-btn:hover { border-color: var(--white); color: var(--white); }
+  .action-btn.ship { border-color: rgba(76,175,122,0.4); color: var(--green); }
+  .action-btn.ship:hover { background: var(--green-dim); }
+  .action-btn.view { border-color: rgba(201,168,76,0.3); color: var(--gold); }
+  .action-btn.view:hover { background: var(--gold-dim); }
+
+  .address-cell { font-size: 12px; color: var(--light); line-height: 1.5; }
+
+  /* ── ORDER DETAIL PANEL ── */
+  .detail-panel {
+    position: fixed;
+    top: 0; right: -480px;
+    width: 480px;
+    height: 100vh;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    z-index: 500;
+    transition: right 0.3s cubic-bezier(0.16,1,0.3,1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .detail-panel.open { right: 0; }
+
+  .panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 499;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+  }
+  .panel-overlay.active { opacity: 1; visibility: visible; }
+
+  .panel-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel-header h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+  }
+
+  .panel-close {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .panel-close:hover { color: var(--white); }
+
+  .panel-body { padding: 28px; flex: 1; }
+
+  .detail-section {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-section:last-child { border-bottom: none; }
+
+  .detail-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .detail-key {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .detail-val { font-size: 13px; text-align: right; max-width: 60%; }
+
+  .panel-actions {
+    padding: 24px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .panel-btn {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+
+  .panel-btn.primary { background: var(--gold); color: var(--black); border-color: var(--gold); }
+  .panel-btn.primary:hover { opacity: 0.85; }
+  .panel-btn.success { background: var(--green-dim); color: var(--green); border-color: rgba(76,175,122,0.3); }
+  .panel-btn.success:hover { background: var(--green); color: var(--black); }
+  .panel-btn.danger { background: var(--red-dim); color: var(--red); border-color: rgba(224,85,85,0.2); }
+  .panel-btn.danger:hover { background: var(--red); color: var(--white); }
+
+  .tracking-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .tracking-input:focus { border-color: var(--gold); }
+  .tracking-input::placeholder { color: var(--gray); }
+
+  /* ── TOAST ── */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toast {
+    padding: 12px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toast.success { border-left-color: var(--green); }
+  .toast.error { border-left-color: var(--red); }
+
+  @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
+
+  /* ── INVENTORY VIEW ── */
+  .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .inventory-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .inventory-card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .size-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 12px;
+  }
+
+  .size-row:last-child { border-bottom: none; }
+
+  .stock-bar {
+    width: 80px;
+    height: 3px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stock-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--gold);
+    transition: width 0.5s;
+  }
+
+  .stock-fill.low { background: var(--red); }
+  .stock-fill.medium { background: var(--yellow); }
+
+  /* ── SHIPPING VIEW ── */
+  .shipping-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    position: relative;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    bottom: -16px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item:last-child::before { display: none; }
+
+  .timeline-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .timeline-dot.active { border-color: var(--green); background: var(--green-dim); }
+
+  .timeline-content { flex: 1; }
+
+  .timeline-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .timeline-meta {
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  /* ── ANALYTICS VIEW ── */
+  .chart-placeholder {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 12px;
+  }
+
+  .chart-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 24px;
+  }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 120px;
+  }
+
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .bar {
+    width: 100%;
+    background: var(--gold-dim);
+    border-top: 2px solid var(--gold);
+    transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+
+  .bar:hover { background: rgba(201,168,76,0.2); }
+
+  .bar-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-align: center;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--gray);
+  }
+
+  .empty-state p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 16px;
+  }
+
+  /* LOGIN SCREEN */
+  .login-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-screen.hidden { display: none; }
+
+  .login-box {
+    width: 100%;
+    max-width: 380px;
+    padding: 48px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+  }
+
+  .login-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.25em;
+    margin-bottom: 4px;
+  }
+
+  .login-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  .login-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .login-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .login-input:focus { border-color: var(--gold); }
+
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .login-btn:hover { opacity: 0.85; }
+
+  .login-hint {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .login-error {
+    font-size: 11px;
+    color: var(--red);
+    margin-top: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+    display: none;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-brand">EXPECTATIONS</div>
+    <div class="login-sub">Manufacturer Portal</div>
+    <label class="login-label">Username</label>
+    <input type="text" class="login-input" id="loginUser" placeholder="manufacturer_id" onkeydown="if(event.key==='Enter') doLogin()">
+    <label class="login-label">Password</label>
+    <input type="password" class="login-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-error" id="loginError">Invalid credentials. Try again.</div>
+    <button class="login-btn" onclick="doLogin()">Access Portal</button>
+    <p class="login-hint">Demo: user <strong style="color:var(--white)">mfg_001</strong> / pass <strong style="color:var(--white)">exp2025</strong></p>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h1>EXPECTATIONS</h1>
+    <p>Manufacturer Portal</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Overview</div>
+    <div class="nav-item active" onclick="switchView('orders', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+      Orders
+      <span class="nav-badge" id="pendingBadge">3</span>
+    </div>
+    <div class="nav-item" onclick="switchView('shipping', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h14M5 8a2 2 0 1 0 0-4h14a2 2 0 1 0 0 4M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/></svg>
+      Shipping
+      <span class="nav-badge green" id="shippedBadge">2</span>
+    </div>
+    <div class="nav-group-label">Inventory</div>
+    <div class="nav-item" onclick="switchView('inventory', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Stock Levels
+    </div>
+    <div class="nav-group-label">Reports</div>
+    <div class="nav-item" onclick="switchView('analytics', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
+    </div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">MF</div>
+    <div class="user-info">
+      <p>Manufacturer 001</p>
+      <span>Active</span>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="live-dot"></div>
+      <h2 id="viewTitle">ORDERS</h2>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" onclick="exportOrders()">↓ Export CSV</button>
+      <button class="topbar-btn primary" onclick="showToast('Orders refreshed', 'success')">↺ Refresh</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ORDERS VIEW -->
+    <div class="view active" id="view-orders">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">New Orders</div>
+          <div class="stat-value" id="stat-new">3</div>
+          <div class="stat-sub up">↑ 2 since yesterday</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Shipped Today</div>
+          <div class="stat-value" id="stat-shipped">2</div>
+          <div class="stat-sub">On time</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value" id="stat-total">14</div>
+          <div class="stat-sub up">↑ 18% this week</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Low Stock Items</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub down">Action needed</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">All Orders</div>
+          <div class="table-controls">
+            <input type="text" class="search-input" placeholder="Search orders…" oninput="searchOrders(this.value)">
+            <select class="filter-select" onchange="filterOrders(this.value)">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+            </select>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table id="ordersTable">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Size / Qty</th>
+                <th>Ship To</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHIPPING VIEW -->
+    <div class="view" id="view-shipping">
+      <div class="stats-row">
+        <div class="stat-card green">
+          <div class="stat-label">In Transit</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub">Tracking active</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Ship Time</div>
+          <div class="stat-value">1.8d</div>
+          <div class="stat-sub up">↑ Faster than last week</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Delivered</div>
+          <div class="stat-value">9</div>
+          <div class="stat-sub">This month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Return Rate</div>
+          <div class="stat-value">2%</div>
+          <div class="stat-sub up">↑ Low</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">Active Shipments</div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Carrier</th>
+                <th>Tracking #</th>
+                <th>Destination</th>
+                <th>ETA</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="shippingBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTORY VIEW -->
+    <div class="view" id="view-inventory">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total SKUs</div>
+          <div class="stat-value">18</div>
+          <div class="stat-sub">6 products</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Low Stock</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub down">Reorder needed</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">In Stock</div>
+          <div class="stat-value">16</div>
+          <div class="stat-sub">Healthy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Units</div>
+          <div class="stat-value">847</div>
+          <div class="stat-sub">Across all SKUs</div>
+        </div>
+      </div>
+      <div class="inventory-grid" id="inventoryGrid"></div>
+    </div>
+
+    <!-- ANALYTICS VIEW -->
+    <div class="view" id="view-analytics">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Orders This Month</div>
+          <div class="stat-value">14</div>
+          <div class="stat-sub up">↑ 40% vs last month</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Revenue</div>
+          <div class="stat-value">$1.2k</div>
+          <div class="stat-sub up">↑ Tracking up</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Avg Order Value</div>
+          <div class="stat-value">$87</div>
+          <div class="stat-sub">Per order</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fulfillment Rate</div>
+          <div class="stat-value">98%</div>
+          <div class="stat-sub up">↑ Excellent</div>
+        </div>
+      </div>
+
+      <div class="chart-placeholder">
+        <div class="chart-title">Orders Per Day — Last 14 Days</div>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:12px">
+        <div class="table-header">
+          <div class="table-title">Top Products This Month</div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Product</th><th>Units Sold</th><th>Revenue</th><th>Top Size</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="product-tag">Archive Hoodie</span></td><td>6</td><td>$534</td><td><span class="size-badge">M</span></td></tr>
+            <tr><td><span class="product-tag">Logo Tee</span></td><td>4</td><td>$180</td><td><span class="size-badge">L</span></td></tr>
+            <tr><td><span class="product-tag">Club Jacket</span></td><td>2</td><td>$330</td><td><span class="size-badge">M</span></td></tr>
+            <tr><td><span class="product-tag">Shell Cargo</span></td><td>2</td><td>$220</td><td><span class="size-badge">S</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ORDER DETAIL PANEL -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-header">
+    <h3 id="panelTitle">Order #EXP-001</h3>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+  <div class="panel-actions" id="panelActions"></div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── DATA ──
+const orders = [
+  { id:'EXP-001', customer:'James Okafor', email:'james@email.com', product:'Archive Oversized Hoodie', category:'hoodies', size:'L', qty:1, price:89, address:'14 Strand St, Cape Town, 8001, ZA', date:'2025-06-04', status:'pending', notes:'Leave at door' },
+  { id:'EXP-002', customer:'Sofia Martins', email:'sofia.m@email.com', product:'Expectations Logo Tee', category:'tees', size:'S', qty:2, price:90, address:'Rua das Flores 22, Porto, Portugal', date:'2025-06-04', status:'pending', notes:'' },
+  { id:'EXP-003', customer:'Kai Nakamura', email:'kai.n@email.com', product:'Shell Cargo Pants', category:'bottoms', size:'M', qty:1, price:110, address:'3-1 Shibuya, Tokyo, Japan 150-0002', date:'2025-06-05', status:'pending', notes:'Gift wrapping please' },
+  { id:'EXP-004', customer:'Amara Diallo', email:'amara.d@email.com', product:'Club Jacket', category:'outerwear', size:'M', qty:1, price:165, address:'12 Rue du Faubourg, Paris 75011, FR', date:'2025-06-03', status:'processing', notes:'' },
+  { id:'EXP-005', customer:'Theo Williams', email:'theo.w@email.com', product:'Archive Oversized Hoodie', category:'hoodies', size:'XL', qty:1, price:89, address:'Brooklyn, NY 11201, USA', date:'2025-06-03', status:'shipped', tracking:'DHL-7842019843', carrier:'DHL' },
+  { id:'EXP-006', customer:'Isla Chen', email:'isla.c@email.com', product:'Naif Washed Tee', category:'tees', size:'XS', qty:1, price:48, address:'15 Orchard Road, Singapore 238831', date:'2025-06-02', status:'shipped', tracking:'FEX-00234892', carrier:'FedEx' },
+  { id:'EXP-007', customer:'Marcus Bello', email:'marcus.b@email.com', product:'Logo Tee', category:'tees', size:'M', qty:3, price:135, address:'Lagos Island, Lagos, Nigeria', date:'2025-06-01', status:'delivered', notes:'' },
+  { id:'EXP-008', customer:'Yuki Abe', email:'yuki.a@email.com', product:'Expectations 6-Panel Cap', category:'accessories', size:'OS', qty:2, price:76, address:'Osaka, Namba 556-0011, Japan', date:'2025-05-30', status:'delivered', notes:'' },
+];
+
+const inventory = [
+  { name:'Archive Oversized Hoodie', sku:'EXP-HOD-001', sizes:{ XS:12, S:8, M:24, L:16, XL:5 } },
+  { name:'Expectations Logo Tee', sku:'EXP-TEE-001', sizes:{ XS:20, S:18, M:30, L:22, XL:14 } },
+  { name:'Naif Washed Tee', sku:'EXP-TEE-002', sizes:{ XS:3, S:6, M:15, L:10, XL:2 } },
+  { name:'Club Jacket', sku:'EXP-OTR-001', sizes:{ XS:0, S:4, M:8, L:5, XL:2 } },
+  { name:'Shell Cargo Pants', sku:'EXP-BOT-001', sizes:{ XS:2, S:9, M:14, L:8, XL:3 } },
+  { name:'6-Panel Cap', sku:'EXP-ACC-001', sizes:{ OS:45 } },
+];
+
+const analyticsData = [1,0,2,1,3,2,1,4,2,3,1,2,3,2];
+
+// ── LOGIN ──
+function doLogin() {
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if (u === 'mfg_001' && p === 'exp2025') {
+    document.getElementById('loginScreen').classList.add('hidden');
+    initDashboard();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function initDashboard() {
+  renderOrders(orders);
+  renderShipping();
+  renderInventory();
+  renderAnalytics();
+}
+
+// ── VIEWS ──
+function switchView(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('viewTitle').textContent = name.toUpperCase();
+}
+
+// ── ORDERS TABLE ──
+function renderOrders(data) {
+  const tbody = document.getElementById('ordersBody');
+  tbody.innerHTML = data.map(o => `
+    <tr>
+      <td><span class="order-id">${o.id}</span></td>
+      <td>
+        <div class="customer-info">
+          <div class="name">${o.customer}</div>
+          <div class="email">${o.email}</div>
+        </div>
+      </td>
+      <td><span class="product-tag">${o.product}</span></td>
+      <td><span class="size-badge">${o.size}</span> × ${o.qty}</td>
+      <td><div class="address-cell">${o.address}</div></td>
+      <td style="font-size:12px;color:var(--light)">${o.date}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>
+        <div class="action-row">
+          <button class="action-btn view" onclick="openPanel('${o.id}')">View</button>
+          ${o.status === 'pending' || o.status === 'processing' ? `<button class="action-btn ship" onclick="markShipped('${o.id}')">↑ Ship</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function statusBadge(s) {
+  const icons = { pending:'⏳', processing:'⚙', shipped:'📦', delivered:'✓', cancelled:'✕' };
+  return `<span class="status-badge ${s}"><span class="status-dot"></span>${s}</span>`;
+}
+
+function searchOrders(q) {
+  const filtered = orders.filter(o =>
+    o.customer.toLowerCase().includes(q.toLowerCase()) ||
+    o.id.toLowerCase().includes(q.toLowerCase()) ||
+    o.product.toLowerCase().includes(q.toLowerCase())
+  );
+  renderOrders(filtered);
+}
+
+function filterOrders(status) {
+  renderOrders(status === 'all' ? orders : orders.filter(o => o.status === status));
+}
+
+// ── SHIP ACTION ──
+function markShipped(id) {
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+  order.status = 'shipped';
+  order.tracking = 'DHL-' + Math.floor(Math.random() * 9000000000 + 1000000000);
+  order.carrier = 'DHL';
+  renderOrders(orders);
+  updateBadges();
+  showToast(`${id} marked as shipped`, 'success');
+}
+
+function updateBadges() {
+  document.getElementById('pendingBadge').textContent = orders.filter(o => o.status === 'pending').length;
+  document.getElementById('shippedBadge').textContent = orders.filter(o => o.status === 'shipped').length;
+  document.getElementById('stat-new').textContent = orders.filter(o => o.status === 'pending').length;
+  document.getElementById('stat-shipped').textContent = orders.filter(o => o.status === 'shipped').length;
+  document.getElementById('stat-total').textContent = orders.length;
+}
+
+// ── PANEL ──
+function openPanel(id) {
+  const o = orders.find(o => o.id === id);
+  if (!o) return;
+  document.getElementById('panelTitle').textContent = 'Order ' + o.id;
+  document.getElementById('panelBody').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">Customer</div>
+      <div class="detail-row"><span class="detail-key">Name</span><span class="detail-val">${o.customer}</span></div>
+      <div class="detail-row"><span class="detail-key">Email</span><span class="detail-val">${o.email}</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Order</div>
+      <div class="detail-row"><span class="detail-key">Product</span><span class="detail-val">${o.product}</span></div>
+      <div class="detail-row"><span class="detail-key">Size</span><span class="detail-val"><span class="size-badge">${o.size}</span></span></div>
+      <div class="detail-row"><span class="detail-key">Qty</span><span class="detail-val">${o.qty}</span></div>
+      <div class="detail-row"><span class="detail-key">Total</span><span class="detail-val" style="color:var(--gold)">$${o.price}</span></div>
+      <div class="detail-row"><span class="detail-key">Date</span><span class="detail-val">${o.date}</span></div>
+      ${o.notes ? `<div class="detail-row"><span class="detail-key">Notes</span><span class="detail-val" style="color:var(--gold)">${o.notes}</span></div>` : ''}
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Shipping Address</div>
+      <p style="font-size:13px;line-height:1.7;color:var(--light)">${o.address}</p>
+    </div>
+    ${o.tracking ? `
+    <div class="detail-section">
+      <div class="detail-section-title">Tracking</div>
+      <div class="detail-row"><span class="detail-key">Carrier</span><span class="detail-val">${o.carrier}</span></div>
+      <div class="detail-row"><span class="detail-key">Number</span><span class="detail-val" style="color:var(--gold);font-family:'Barlow Condensed',sans-serif;letter-spacing:0.1em">${o.tracking}</span></div>
+    </div>` : ''}
+    <div class="detail-section">
+      <div class="detail-section-title">Status</div>
+      ${statusBadge(o.status)}
+    </div>
+    ${o.status === 'pending' || o.status === 'processing' ? `
+    <div>
+      <div class="detail-section-title" style="margin-bottom:12px">Enter Tracking Number</div>
+      <input type="text" class="tracking-input" id="trackingInput" placeholder="e.g. DHL-7842019843">
+    </div>` : ''}
+  `;
+
+  document.getElementById('panelActions').innerHTML = `
+    ${(o.status === 'pending' || o.status === 'processing') ? `
+      <button class="panel-btn success" onclick="shipFromPanel('${o.id}')">↑ Mark as Shipped</button>
+      <button class="panel-btn primary" onclick="processFromPanel('${o.id}')">⚙ Mark Processing</button>
+    ` : ''}
+    <button class="panel-btn" onclick="closePanel()">Close</button>
+  `;
+
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('active');
+}
+
+function closePanel() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('active');
+}
+
+function shipFromPanel(id) {
+  const trackInput = document.getElementById('trackingInput');
+  const tracking = trackInput ? trackInput.value : '';
+  const order = orders.find(o => o.id === id);
+  if (order) {
+    order.status = 'shipped';
+    order.tracking = tracking || ('DHL-' + Math.floor(Math.random() * 9000000000 + 1000000000));
+    order.carrier = 'DHL';
+    renderOrders(orders);
+    updateBadges();
+    showToast(`${id} shipped successfully`, 'success');
+    closePanel();
+  }
+}
+
+function processFromPanel(id) {
+  const order = orders.find(o => o.id === id);
+  if (order) {
+    order.status = 'processing';
+    renderOrders(orders);
+    updateBadges();
+    showToast(`${id} moved to processing`, 'success');
+    closePanel();
+  }
+}
+
+// ── SHIPPING ──
+function renderShipping() {
+  const shipped = orders.filter(o => o.status === 'shipped');
+  document.getElementById('shippingBody').innerHTML = shipped.length ? shipped.map(o => `
+    <tr>
+      <td><span class="order-id">${o.id}</span></td>
+      <td>${o.customer}</td>
+      <td><span class="product-tag">${o.product}</span></td>
+      <td style="font-size:12px">${o.carrier || 'DHL'}</td>
+      <td style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:0.1em;color:var(--gold)">${o.tracking || '—'}</td>
+      <td class="address-cell">${o.address}</td>
+      <td style="font-size:12px;color:var(--gray)">Est. 3–5 days</td>
+      <td>${statusBadge('shipped')}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="8"><div class="empty-state"><p>No active shipments</p></div></td></tr>';
+}
+
+// ── INVENTORY ──
+function renderInventory() {
+  document.getElementById('inventoryGrid').innerHTML = inventory.map(item => `
+    <div class="inventory-card">
+      <div class="inventory-card-name">${item.name}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--gray);margin-bottom:12px">${item.sku}</div>
+      ${Object.entries(item.sizes).map(([size, stock]) => {
+        const max = 30;
+        const pct = Math.min((stock / max) * 100, 100);
+        const cls = stock <= 3 ? 'low' : stock <= 8 ? 'medium' : '';
+        return `
+        <div class="size-row">
+          <span class="size-badge">${size}</span>
+          <div class="stock-bar"><div class="stock-fill ${cls}" style="width:${pct}%"></div></div>
+          <span style="font-size:12px;color:${stock <= 3 ? 'var(--red)' : stock <= 8 ? 'var(--yellow)' : 'var(--light)'}">${stock}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+// ── ANALYTICS ──
+function renderAnalytics() {
+  const max = Math.max(...analyticsData);
+  const days = ['23M','24T','25W','26T','27F','28S','29S','30M','31T','1W','2T','3F','4S','5S'];
+  document.getElementById('barChart').innerHTML = analyticsData.map((v, i) => `
+    <div class="bar-group">
+      <div class="bar" style="height:${(v/max)*100}%" title="${v} orders"></div>
+      <div class="bar-label">${days[i]}</div>
+    </div>
+  `).join('');
+}
+
+// ── EXPORT ──
+function exportOrders() {
+  const csv = ['ID,Customer,Email,Product,Size,Qty,Price,Address,Date,Status']
+    .concat(orders.map(o => `${o.id},"${o.customer}",${o.email},"${o.product}",${o.size},${o.qty},${o.price},"${o.address}",${o.date},${o.status}`))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'expectations_orders.csv';
+  a.click();
+  showToast('CSV exported', 'success');
+}
+
+// ── TOAST ──
+function showToast(msg, type='') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+// Init without login for dev peek (remove in prod)
+// initDashboard();
+</script>
+</body>
+</html>
