@@ -311,14 +311,36 @@
 <script>
 
 
-  // Prevent all scrolling and touch movement
+  // Prevent scrolling except when keyboard is open
+  var keyboardOpen = false;
+
+  document.querySelector('.email-input').addEventListener('focus', function() {
+    keyboardOpen = true;
+    document.body.style.position = 'relative';
+    document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
+    setTimeout(function() {
+      document.querySelector('.email-input').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  });
+
+  document.querySelector('.email-input').addEventListener('blur', function() {
+    keyboardOpen = false;
+    document.body.style.position = 'fixed';
+    document.body.style.overflow = 'hidden';
+    document.body.style.height = '100%';
+    window.scrollTo(0, 0);
+  });
+
   document.addEventListener('touchmove', function(e) {
-    e.preventDefault();
+    if (!keyboardOpen) e.preventDefault();
   }, { passive: false });
 
   document.addEventListener('scroll', function(e) {
-    e.preventDefault();
-    window.scrollTo(0, 0);
+    if (!keyboardOpen) {
+      e.preventDefault();
+      window.scrollTo(0, 0);
+    }
   }, { passive: false });
 
   function handleSubmit(e){
